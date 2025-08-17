@@ -1,2 +1,11 @@
 @import "@nuxt/ui";
 @import "tailwindcss";
+
+/*html, body {*/
+/*    transition: background-color 5s;*/
+/*}*/
+html {
+    --light-text-color: #1e2939; /*gray-800*/
+    --light-text-secondary-color: #4a5565; /*gray-600*/
+    --dark-text-color: #e5e7eb; /*gray-200*/
+}

@@ -1,5 +1,7 @@
 // tailwind config file
 import plugin from 'tailwindcss/plugin';
+import tailwindScrollbar from 'tailwind-scrollbar';
+import breakpoints from '~/configs/breakpoints';
 
 export default {
   mode: 'jit',
@@ -11,13 +13,7 @@ export default {
         doublewidest: '.2em',
       },
     },
-    screens: {
-      'sm': '640px',
-      'md': '768px',
-      'lg': '1024px',
-      'xl': '1280px',
-      '2xl': '1536px',
-    },
+    screens: breakpoints,
   },
   plugins: [
     plugin(function ({ addUtilities }) {
@@ -36,6 +32,7 @@ export default {
         },
       });
     }),
+    tailwindScrollbar,
   ],
   content: [
     './app.vue',

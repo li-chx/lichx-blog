@@ -2,6 +2,7 @@
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineNuxtConfig({
+  ssr: false,
   compatibilityDate: '2025-05-15',
   devtools: { enabled: false },
   vite: {
@@ -11,10 +12,21 @@ export default defineNuxtConfig({
   },
   modules: [
     '@nuxt/eslint',
-    '@nuxt/icon',
     '@nuxt/ui',
     '@pinia/nuxt',
-    '@nuxtjs/color-mode',
+    '@nuxt/content',
   ],
   css: ['~/assets/css/main.css'],
+  ui: {
+    colorMode: false,
+  },
+  app: {
+    head: {
+      script: [{ src: '/darkVerify.js' }],
+    },
+  },
+  sourcemap: {
+    server: true,
+    client: true
+  }
 });
