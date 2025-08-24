@@ -22,11 +22,14 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
+      htmlAttrs: {
+        lang: 'zh-CN',
+      },
       script: [{ src: '/darkVerify.js' }],
     },
   },
   sourcemap: {
     server: true,
-    client: true
-  }
+    client: true,
+  },
 });

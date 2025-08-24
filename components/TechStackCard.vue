@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import Highcharts from 'highcharts';
-import { DataAnomaly } from '~/types/ArticleMetaData';
+import { DataAnomaly } from '~/types/PostMetaData';
 import 'overlayscrollbars/overlayscrollbars.css';
 import useColorModeStore from '~/stores/colorModeStore';
 import useIconStore from '~/stores/iconStore';
@@ -9,11 +9,11 @@ import { OverlayScrollbarsComponent } from 'overlayscrollbars-vue';
 import type { OverflowBehavior, ScrollbarsAutoHideBehavior, ScrollbarsVisibilityBehavior } from 'overlayscrollbars';
 
 const props = withDefaults(defineProps<{
+  asyncKey: string;
   techStack?: string[] | DataAnomaly;
   techStackPercent?: number[] | DataAnomaly;
   techStackIconNames?: string[] | DataAnomaly;
   techStackThemeColors?: string[] | DataAnomaly;
-  asyncKey: string;
 }>(), {
   techStack: () => ['Vue', 'Nuxt', 'TypeScript', 'JavaScript', 'CSS', 'HTML', 'Node.js', 'Python', 'Java', 'C#'],
   techStackPercent: () => [5, 3, 4, 2, 1, 1, 2, 3, 2, 1],
@@ -26,6 +26,7 @@ const techStackLightIconSVG = ref<string[]>([]);
 const techStackDarkIconSVG = ref<string[]>([]);
 const { colorMode } = storeToRefs(useColorModeStore());
 
+// 没有这个asyncKey会加载不出正确的图标
 const { pending } = useAsyncData(props.asyncKey, async () => {
   if (props.techStackIconNames === DataAnomaly.DataNotFound || props.techStackIconNames === DataAnomaly.Invalid)
     return [];
@@ -147,7 +148,7 @@ onMounted(() => {
     noDataAvailable.value = true;
     return;
   }
-  window.addEventListener('resize', renderChart);
+  // window.addEventListener('resize', renderChart);
   colorModeCallBackKey = useColorModeStore().registerCallBack(renderChart);
   watch(pending, (isPending) => {
     if (!isPending) {
@@ -158,7 +159,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  window.removeEventListener('resize', renderChart);
+  // window.removeEventListener('resize', renderChart);
   useColorModeStore().unregisterCallBack(colorModeCallBackKey);
 });
 
@@ -184,17 +185,33 @@ const scrollbarOptions = {
     <div v-if="noDataAvailable" class="flex items-center justify-center h-full p-8">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 112.01">
         <g id="_图层_1" data-name="图层 1">
-          <polyline class="fill-none stroke-old-neutral-400 dark:stroke-old-neutral-500 [stroke-miterlimit:10]" points="1.5 28.63 1.5 1.5 63.5 1.59"/>
-          <polyline class="fill-none stroke-old-neutral-400 dark:stroke-old-neutral-500 [stroke-miterlimit:10]" points="254.5 83.38 254.5 110.5 192.5 110.41"/>
-          <polyline class="fill-none stroke-old-neutral-400 dark:stroke-old-neutral-500 [stroke-miterlimit:10] stroke-3" points="254.5 28.63 254.5 1.5 192.5 1.59"/>
-          <polyline class="fill-none stroke-old-neutral-400 dark:stroke-old-neutral-500 [stroke-miterlimit:10] stroke-3" points="1.5 83.38 1.5 110.5 63.5 110.41"/>
+          <polyline
+              class="fill-none stroke-old-neutral-400 dark:stroke-old-neutral-500 [stroke-miterlimit:10]"
+              points="1.5 28.63 1.5 1.5 63.5 1.59"/>
+          <polyline
+              class="fill-none stroke-old-neutral-400 dark:stroke-old-neutral-500 [stroke-miterlimit:10]"
+              points="254.5 83.38 254.5 110.5 192.5 110.41"/>
+          <polyline
+              class="fill-none stroke-old-neutral-400 dark:stroke-old-neutral-500 [stroke-miterlimit:10] stroke-3"
+              points="254.5 28.63 254.5 1.5 192.5 1.59"/>
+          <polyline
+              class="fill-none stroke-old-neutral-400 dark:stroke-old-neutral-500 [stroke-miterlimit:10] stroke-3"
+              points="1.5 83.38 1.5 110.5 63.5 110.41"/>
         </g>
         <g id="_图层_2" data-name="图层 2">
-          <text class="[font-family:ArialMT,Arial] text-xl stroke-old-neutral-600 dark:stroke-old-neutral-400 fill-old-neutral-600 dark:fill-old-neutral-400" transform="translate(89.48 61.61)"><tspan x="0" y="0">No Data</tspan></text>
+          <text
+              class="[font-family:ArialMT,Arial] text-xl stroke-old-neutral-600 dark:stroke-old-neutral-400 fill-old-neutral-600 dark:fill-old-neutral-400"
+              transform="translate(89.48 61.61)">
+            <tspan x="0" y="0">No Data</tspan>
+          </text>
         </g>
         <g id="_图层_3" data-name="图层 3">
-          <line class="fill-none stroke-old-neutral-400 dark:stroke-old-neutral-500 [stroke-miterlimit:10]" x1="16" y1="11" x2="90" y2="39.8"/>
-          <line class="fill-none stroke-old-neutral-400 dark:stroke-old-neutral-500 [stroke-miterlimit:10]" x1="166" y1="72.21" x2="240" y2="101"/>
+          <line
+              class="fill-none stroke-old-neutral-400 dark:stroke-old-neutral-500 [stroke-miterlimit:10]" x1="16"
+              y1="11" x2="90" y2="39.8"/>
+          <line
+              class="fill-none stroke-old-neutral-400 dark:stroke-old-neutral-500 [stroke-miterlimit:10]" x1="166"
+              y1="72.21" x2="240" y2="101"/>
         </g>
       </svg>
     </div>

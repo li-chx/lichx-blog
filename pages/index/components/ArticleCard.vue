@@ -1,34 +1,14 @@
 <script setup lang="ts">
 
-import { DataAnomaly, toArticleMetaDataType } from '~/types/ArticleMetaData';
-import type { ArticleMetaData } from '~/types/ArticleMetaData';
+import { DataAnomaly, defaultMetaData } from '~/types/PostMetaData';
+import type { PostMetaData } from '~/types/PostMetaData';
+import breakpointsHelper from '~/utils/BreakpointsHelper';
 
 const props = withDefaults(defineProps<{
-  article?: ArticleMetaData;
+  article?: PostMetaData;
 }>(),
 {
-  article: () => toArticleMetaDataType({
-    id: 'default ID',
-    title: 'ApiFox / Postman 使用WebSocket连接SignalR进行测试需要注意的小问题',
-    description: 'default Description',
-    created_at: new Date('2025-01-01T00:00:00Z'), // 默认创建时间
-    published_at: new Date('2025-01-01T00:01:00Z'), // 默认发布时间
-    draft: true,
-    updated_at: [new Date('2025-01-01T00:02:00Z'), new Date('2025-01-01T00:03:00Z')], // 默认更新时间
-    tags: ['C#', 'TS', 'Windows Professional version with Webstorm 2025'],
-    tech_stack: new Map([
-      ['Vue', 5],
-      ['Nuxt', 3],
-      ['TypeScript', 4],
-      ['JavaScript', 2],
-      ['CSS', 1],
-      ['HTML', 1],
-      ['Node.js', 2],
-      ['Python', 3],
-      ['Java', 2],
-      ['C#', 1],
-    ]),
-  }),
+  article: () => defaultMetaData,
 });
 
 function dateFormat(date: Date | DataAnomaly) {
@@ -43,9 +23,6 @@ function dateFormat(date: Date | DataAnomaly) {
     minute: '2-digit',
   });
 }
-
-// const { colorMode } = storeToRefs(useColorModeStore());
-// console.log(props.article.tech_stack)
 
 function getCostTime(length: number | DataAnomaly) {
   if (length === DataAnomaly.DataNotFound || length === DataAnomaly.Invalid) {
@@ -64,29 +41,36 @@ function getCostTime(length: number | DataAnomaly) {
 </script>
 
 <template>
-  <div class="p-5 light:bg-old-neutral-200 dark:bg-old-neutral-800 min-h-64">
+  <div class="p-5 light:bg-old-neutral-200 dark:bg-old-neutral-800 min-h-64 transition-all duration-500">
     <div class="text-4xl">
       {{ props.article.title }}
     </div>
-    <div class="flex items-center mt-2">
+    <div class="flex items-center mt-2 max-w-96 overflow-hidden">
 
       <div title="发布时间" class="flex items-center">
         <Icon name="lucide:clock-arrow-up"/>
-        <div class="ml-1">
-          {{ dateFormat(props.article.published_at) }}&nbsp;
+        <div class="ml-1 text-nowrap">
+          {{ dateFormat(props.article.published_at) }}
+        </div>
+      </div>
+
+      <div title="分类" class="flex items-center ml-2">
+        <Icon name="material-symbols:category"/>
+        <div class="ml-1 text-nowrap">
+          {{ props.article.category }}
         </div>
       </div>
 
       <div title="字数" class="flex items-center ml-2">
         <Icon name="fluent:text-word-count-20-filled"/>
-        <div class="ml-1 inline">
+        <div class="ml-1 text-nowrap">
           {{ props.article.word_count }}字
         </div>
       </div>
 
       <div title="预计阅读时间" class="flex items-center ml-2">
         <Icon name="octicon:stopwatch-16"/>
-        <div class="ml-1 inline">
+        <div class="ml-1 text-nowrap">
           {{ getCostTime(props.article.word_count) }}
         </div>
       </div>
@@ -98,14 +82,25 @@ function getCostTime(length: number | DataAnomaly) {
           {{ props.article.description }}
         </div>
       </div>
-      <TechStackCard
-          :async-key="props.article.id"
-          :tech-stack="props.article.tech_stack"
-          :tech-stack-icon-names="props.article.tech_stack_icon_names"
-          :tech-stack-theme-colors="props.article.tech_stack_theme_colors"
-          :tech-stack-percent="props.article.tech_stack_percent"
-          class="w-64"
-      />
+      <Transition
+          enter-active-class="transition-opacity duration-500 ease-in-out"
+          enter-from-class="opacity-0"
+          enter-to-class="opacity-100"
+          leave-active-class="transition-opacity duration-500 ease-in-out"
+          leave-from-class="opacity-100"
+          leave-to-class="opacity-0"
+      >
+        <TechStackCard
+            v-if="breakpointsHelper.greater('lg').value"
+            :async-key="'stack:' + props.article.id"
+            :tech-stack="props.article.tech_stack"
+            :tech-stack-icon-names="props.article.tech_stack_icon_names"
+            :tech-stack-theme-colors="props.article.tech_stack_theme_colors"
+            :tech-stack-percent="props.article.tech_stack_percent"
+            class="w-64"
+        />
+      </Transition>
+
     </div>
     <hr/>
     <div class="flex mt-2">
@@ -134,15 +129,14 @@ function getCostTime(length: number | DataAnomaly) {
 
       </div>
     </div>
-    <div v-if="Array.isArray(props.article.tags)" class="flex items-center">
-      <Icon name="clarity:tags-solid"/>
-      <div v-for="(tag,index) of props.article.tags" :key="index">
-        <div class="ml-1">{{ tag }}</div>
+    <div v-if="Array.isArray(props.article.tags)" class="flex items-top">
+      <Icon name="clarity:tags-solid" class="mt-1"/>
+      <div>
+        <div v-for="(tag,index) of props.article.tags" :key="index" class="inline-block">
+          <div class="ml-1 inline">{{ tag }}</div>
+          <div v-if="index !== props.article.tags.length - 1" class="inline">,</div>
+        </div>
       </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-
-</style>

@@ -2,8 +2,6 @@
 import type { NavigationMenuItem } from '@nuxt/ui';
 import useColorModeStore from '~/stores/colorModeStore';
 import { useWindowScroll } from '@vueuse/core';
-// import gsap from 'gsap';
-// import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 const { colorMode } = storeToRefs(useColorModeStore());
 const isHome = computed(() => useRoute().path === '/');
@@ -42,18 +40,25 @@ onMounted(() => {
   }, 2000);
 });
 const scrollY = useWindowScroll().y;
-const headerHeight = ref(0);
 const isScrollDown = ref(false);
 // gsap.registerPlugin(ScrollTrigger);
 
 watch(scrollY, (newY) => {
   if (newY > 0 && !collapsed.value) {
     collapsed.value = true;
-    headerHeight.value = 0;
   }
   isScrollDown.value = newY > 215;
 });
 
+const isLoading = ref(false);
+
+useRouter().beforeEach(() => {
+  isLoading.value = true;
+});
+
+useRouter().afterEach(() => {
+  isLoading.value = false;
+});
 </script>
 
 <template>
@@ -78,12 +83,12 @@ watch(scrollY, (newY) => {
         >
           <div
               v-if="colorMode === 'light'"
-              class="flex w-full h-full absolute bg-[url('/79d52228c770808810a310115567e6790380823a.png')] bg-cover bg-top">
+              class="flex h-full w-full absolute bg-[url('/79d52228c770808810a310115567e6790380823a.png')] bg-cover bg-top ">
             <slot name="header"/>
           </div>
           <div
               v-else
-              class="flex w-full h-full absolute bg-[url('/anime-8788959.jpg')] bg-cover bg-center">
+              class="flex h-full w-full absolute bg-[url('/anime-8788959.jpg')] bg-cover bg-center">
             <slot name="header"/>
           </div>
         </Transition>
@@ -107,25 +112,35 @@ watch(scrollY, (newY) => {
         </Transition>
         <!-- navbar -->
         <div
-            class="fixed z-10 w-full flex justify-center transition-all duration-500 dark:bg-gray-800/60 bg-old-neutral-50/40 backdrop-blur-sm dark:backdrop-blur-md">
-          <div class="flex-1 overflow-hidden">
-            <div class="not-xl:hidden">
+            class="fixed z-10 w-full transition-all duration-500 dark:bg-gray-800/60 bg-old-neutral-50/40 backdrop-blur-sm dark:backdrop-blur-md">
+          <div class="flex justify-center items-center h-full">
+            <div class="flex-1 overflow-hidden">
               <slot name="navbarLeft" :is-scroll-down="isScrollDown"/>
             </div>
+            <div
+                class="transition-all duration-500 flex 2xl:w-[1240px] xl:w-[1020px] lg:w-[964px] md:w-[708px] sm:w-[580px] w-10/12">
+              <UNavigationMenu :items="items" :class="colorMode" class="w-full"/>
+            </div>
+            <div class="flex-1 overflow-hidden">
+              <slot name="navbarRight" :is-scroll-down="isScrollDown"/>
+            </div>
           </div>
-          <div
-              class="transition-all duration-500 flex 2xl:w-[1240px] xl:w-[1020px] lg:w-[964px] md:w-[708px] sm:w-[580px] w-[400px]">
-            <UNavigationMenu :items="items" :class="colorMode" class="w-full"/>
-          </div>
-          <div class="flex-1 overflow-hidden">
-            <slot name="navbarRight" :is-scroll-down="isScrollDown"/>
-          </div>
+          <Transition
+              enter-active-class="transition-opacity duration-500 ease-in-out"
+              enter-from-class="opacity-0"
+              enter-to-class="opacity-100"
+              leave-active-class="transition-opacity duration-500 ease-in-out"
+              leave-from-class="opacity-100"
+              leave-to-class="opacity-0">
+            <UProgress v-if="isLoading" :size="'sm'" class="fixed z-20"/>
+          </Transition>
         </div>
+
       </div>
       <div class="flex justify-center items-center  duration-500 bg-white dark:bg-[#16191b] h-full">
         <div
             :class="collapsed ? 'min-h-[80vh]' : 'min-h-[60vh]'"
-            class="transition-all duration-500 ease-in-out 2xl:w-[1240px] xl:w-[1020px] lg:w-[964px] md:w-[708px] sm:w-[580px] w-[400px]">
+            class="transition-all duration-500 ease-in-out 2xl:w-[1240px] xl:w-[1020px] lg:w-[964px] md:w-[708px] sm:w-[580px] w-11/12">
           <slot name="content"/>
         </div>
       </div>

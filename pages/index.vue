@@ -1,15 +1,7 @@
 <script setup lang="ts">
-// onMounted(() =>
-//   useColorMode().preference = 'dark',
-// );
-// function clickHandler() {
-//   console.log('Button clicked');
-//   useColorMode().preference = useColorMode().preference === 'light'? 'dark' : 'light';
-// }
-
 import useColorModeStore from '~/stores/colorModeStore';
+import breakpointsHelper from '~/utils/BreakpointsHelper';
 
-// const { colorMode } = storeToRefs(useColorModeStore());
 </script>
 
 <template>
@@ -23,7 +15,9 @@ import useColorModeStore from '~/stores/colorModeStore';
           leave-from-class="opacity-100"
           leave-to-class="opacity-0"
       >
-        <div v-if="isScrollDown" class="pl-5 text-xl h-12 leading-11 flex">
+        <div
+            v-if="isScrollDown && breakpointsHelper.greaterOrEqual('xl').value"
+            class="pl-5 text-xl h-12 leading-11 flex">
           随机存取
         </div>
       </Transition>
@@ -61,7 +55,7 @@ import useColorModeStore from '~/stores/colorModeStore';
     </template>
     <template #header>
       <div class="w-full flex-1 justify-center flex items-center">
-        <p class="text-8xl">
+        <p class="text-8xl mt-12">
           随机存取
         </p>
       </div>
@@ -70,17 +64,17 @@ import useColorModeStore from '~/stores/colorModeStore';
       <div>
         <NuxtRouteAnnouncer/>
         <NuxtPage/>
-        <button
-            @click="() => {
-                 useColorModeStore().toggleColorMode();
-            }
-        ">swap Theme
-        </button>
-        <div class="min-h-[100vh]"></div>
       </div>
     </template>
     <template #footer>
-      <div class="w-full flex-1 justify-center flex items-center"></div>
+      <div class="w-full flex flex-col justify-center items-center p-10 text-old-neutral-500">
+        <div>
+          © 2025 随机存取. 由Lichx制作
+        </div>
+        <div>
+          蒙ICP备2025022865号
+        </div>
+      </div>
     </template>
   </NuxtLayout>
 </template>

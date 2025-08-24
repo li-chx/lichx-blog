@@ -5,15 +5,17 @@ export enum DataAnomaly {
   Invalid = 'DataInvalid',
 }
 
-export type ArticleMetaData = {
+export type PostMetaData = {
   id: string;
   title: string;
   description: string;
   created_at: Date | DataAnomaly;
+  category: string;
   published_at: Date | DataAnomaly;
   draft: boolean;
   updated_at: Date[] | DataAnomaly;
   tags: string[];
+  type: string;
   tech_stack: string[] | DataAnomaly;
   tech_stack_percent: number[] | DataAnomaly;
   tech_stack_icon_names: string[] | DataAnomaly;
@@ -37,8 +39,9 @@ function getDate(data: Record<string, unknown>, key: string): Date | DataAnomaly
   return date;
 }
 
-export function toArticleMetaDataType(src: unknown): ArticleMetaData {
+export function toMetaDataType(src: unknown): PostMetaData {
   if (typeof src !== 'object' || src === null) {
+    console.log(src);
     throw new TypeError('Expected an object');
   }
   const data = src as Record<string, unknown>;
@@ -104,6 +107,8 @@ export function toArticleMetaDataType(src: unknown): ArticleMetaData {
     id: String(data.id),
     title: String(data.title),
     description: String(data.description ?? ''),
+    category: String(data.category ?? '无'),
+    type: String(data.type ?? 'article'),
     created_at: created_at,
     published_at: published_at,
     draft: Boolean(data.draft ?? false),
@@ -116,3 +121,26 @@ export function toArticleMetaDataType(src: unknown): ArticleMetaData {
     word_count: wordCountResult,
   };
 }
+
+export const defaultMetaData = toMetaDataType({
+  id: 'default ID',
+  title: 'ApiFox / Postman 使用WebSocket连接SignalR进行测试需要注意的小问题',
+  description: 'default Description',
+  created_at: new Date('2025-01-01T00:00:00Z'), // 默认创建时间
+  published_at: new Date('2025-01-01T00:01:00Z'), // 默认发布时间
+  draft: true,
+  updated_at: [new Date('2025-01-01T00:02:00Z'), new Date('2025-01-01T00:03:00Z')], // 默认更新时间
+  tags: ['C#', 'TS', 'Windows Professional version with Webstorm 2025', 'Windows Professional version with Visual Studio 2022'],
+  tech_stack: new Map([
+    ['Vue', 5],
+    ['Nuxt', 3],
+    ['TypeScript', 4],
+    ['JavaScript', 2],
+    ['CSS', 1],
+    ['HTML', 1],
+    ['Node.js', 2],
+    ['Python', 3],
+    ['Java', 2],
+    ['C#', 1],
+  ]),
+});
