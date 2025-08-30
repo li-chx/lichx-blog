@@ -17,20 +17,37 @@ const { colorMode } = storeToRefs(useColorModeStore());
 </script>
 
 <template>
-  <div class="p-5 pt-0 bg-old-neutral-200 dark:bg-old-neutral-800">
-    <MdPreview :editor-id="editorId" :theme="colorMode" :model-value="eraseHeaderMarkdown" class="transition-all duration-500"/>
+  <div class="pt-0 bg-old-neutral-200 dark:bg-old-neutral-800 transition-colors duration-500">
+    <MdPreview :editor-id="editorId" :theme="colorMode" :model-value="eraseHeaderMarkdown" class="transition-all duration-500 max-w-full"/>
   </div>
-
 </template>
 
 <style scoped>
-:global(.md-editor) {
+:deep(.md-editor) {
   --md-bk-color: #e5e5e5;
   --md-theme-heading-1-color: #fff;
   transition-property: all;
   transition-duration: 500ms;
   --tw-ease: cubic-bezier(0.4, 0, 0.2, 1);
   transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+}
+:deep(.md-editor-preview blockquote) {
+  transition-property: all;
+  transition-duration: 500ms;
+  --tw-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+}
+
+:deep(.md-editor-preview .md-editor-code .md-editor-code-head) {
+  z-index: 5;
+}
+
+:deep(ul) {
+  list-style-type: disc;
+}
+
+:deep(ol) {
+  list-style-type: decimal;
 }
 
 :global(.dark .md-editor) {
@@ -40,4 +57,5 @@ const { colorMode } = storeToRefs(useColorModeStore());
 :global(.dark .md-editor-preview) {
   --md-color: var(--ui-text);
 }
+
 </style>

@@ -1,44 +1,56 @@
 <script setup lang="ts">
 
-import { toMetaDataType } from '~/types/PostMetaData';
-import RamblingCard from '~/pages/index/components/RamblingCard.vue';
+import { sortMetaData, toMetaDataType } from '~/types/PostMetaData';
+import type { PostMetaData } from '~/types/PostMetaData';
+import SimpleCard from '~/pages/index/components/SimpleCard.vue';
 import ArticleCard from '~/pages/index/components/ArticleCard.vue';
 
-const { data: posts } = useAsyncData(async () => await queryCollection('content').order('published_at', 'DESC').all());
-
-// onMounted(() => {
-//   setTimeout(() => {
-//     console.log(articles.value);
-//   }, 2000);
-// });
-type PostItem = NonNullable<typeof posts.value>[number];
-
-function toArticlePage(article: PostItem) {
+const { data: srcPostsMetaData } = useAsyncData(async () => sortMetaData((await queryCollection('content').all()).map((x) => toMetaDataType(x)), 'published_at', true));
+const postsMetaData = ref<PostMetaData[]>([]);
+function toArticlePage(article: PostMetaData) {
   navigateTo(`/article/${encodeURIComponent(article.id)}`);
 }
+watch(srcPostsMetaData, () => {
+  postsMetaData.value = srcPostsMetaData.value || [];
+});
 
+//
+// async function loadMetaData() {
+//
+// }
+function filterRuleChange(rule: string) {
+  if (rule === '')
+    postsMetaData.value = srcPostsMetaData.value || [];
+  else
+    postsMetaData.value = (srcPostsMetaData.value || []).filter((post) => post.type === rule);
+}
 </script>
 
 <template>
   <div>
-    <div class="table w-full mt-6">
+    <div class="table w-full mt-6 table-fixed">
       <div class="sticky top-16 float-left bg-old-neutral-200 dark:bg-old-neutral-800 max-h-[calc(100vh-4rem)]">
-        <div class="relative duration-500 transition-all xl:w-80 w-0 mr-2/3 overflow-hidden">
+        <div class="relative duration-500 transition-all xl:w-80 w-0 overflow-hidden">
           <div class="w-80 top-0 left-0 text-gray-800 dark:text-white p-5">
-            test123456
+            <PersonalCard
+                v-if="postsMetaData" :posts-meta-data="postsMetaData!"
+                @filter-rule-change="filterRuleChange"/>
           </div>
         </div>
       </div>
       <div class="transition-all duration-500 float-right xl:w-[calc(100%-20rem-40px)] w-full">
-        <ArticleCard class="mb-6 w-full transition-shadow duration-300 shadow-lg hover:shadow-old-neutral-600"/>
-        <div v-for="article in posts" :key="article.id" class="mb-6 w-full transition-shadow duration-300 shadow-lg hover:shadow-old-neutral-600 hover:cursor-pointer">
+        <!--        <ArticleCard class="mb-6 w-full transition-shadow duration-300 shadow-lg hover:shadow-old-neutral-600"/>-->
+        <div
+            v-for="post in postsMetaData" :key="post.id"
+            class="mb-6 w-full transition-shadow duration-300 shadow-lg hover:shadow-old-neutral-600 hover:cursor-pointer">
           <ArticleCard
-              v-if="!article.draft && article.type === 'article'"
-              :article="toMetaDataType(article)"
-              @click="toArticlePage(article)"/>
-          <RamblingCard
-              v-else-if="!article.draft && article.type === 'rambling'"
-              :rambling="toMetaDataType(article)"/>
+              v-if="!post.draft && post.type === 'article'"
+              class="w-full"
+              :meta-data="post"
+              @click="toArticlePage(post)"/>
+          <SimpleCard
+              v-else-if="!post.draft && (post.type === 'rambling' || post.type === 'announcement')"
+              :meta-data="post"/>
         </div>
       </div>
     </div>

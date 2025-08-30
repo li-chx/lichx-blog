@@ -3,8 +3,9 @@
 </script>
 
 <template>
-admin
-
+  <div>
+    admin
+  </div>
 </template>
 
 <style scoped>

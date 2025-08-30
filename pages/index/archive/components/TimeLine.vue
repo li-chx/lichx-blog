@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { DataAnomaly } from '~/types/PostMetaData';
+import { DataAnomaly, sortMetaData } from '~/types/PostMetaData';
 import type { PostMetaData } from '~/types/PostMetaData';
 
-const articles = defineModel<PostMetaData[]>('articles', {
+const articles = defineModel<PostMetaData[]>('metadata', {
   default: () => [],
 });
 
@@ -10,28 +10,23 @@ const props = withDefaults(defineProps<{
   currentChoice?: 'time' | 'category';
 }>(),
 {
-  currentChoice: 'time',
+  currentChoice: 'time' as ('time' | 'category'),
 });
 
 watch(() => props.currentChoice, (newChoice) => {
   if (newChoice === 'time') {
-    articles.value.sort((a, b) => new Date(b.published_at || '2000-01-01').getTime() - new Date(a.published_at || '2000-01-01').getTime());
+    sortMetaData(articles.value, 'published_at');
   } else {
-    articles.value.sort((a, b) => {
-      if (a.category === b.category) {
-        return new Date(b.published_at || '2000-01-01').getTime() - new Date(a.published_at || '2000-01-01').getTime();
-      }
-      return a.category.localeCompare(b.category);
-    });
+    sortMetaData(articles.value, 'category');
   }
-});
+}, { immediate: true });
 
 function toArticlePage(article: PostMetaData) {
   navigateTo(`/article/${encodeURIComponent(article.id)}`);
 }
 
 function getYear(article: PostMetaData) {
-  return new Date(article.published_at).getFullYear();
+  return new Date(article?.published_at || 0).getFullYear();
 }
 
 function dateFormatToTime(date: Date | DataAnomaly) {
@@ -62,16 +57,16 @@ function dateFormatToDate(date: Date | DataAnomaly) {
     <div
         v-for="(article,index) of articles" :key="article.id"
         class="border-l-2 border-l-old-neutral-400 dark:border-l-old-neutral-500 pl-4">
-      <Transition
-          enter-active-class="transition-opacity duration-500 ease-in-out"
-          enter-from-class="opacity-0"
-          enter-to-class="opacity-100"
-          leave-active-class="transition-opacity duration-500 ease-in-out"
-          leave-from-class="opacity-100"
-          leave-to-class="opacity-0"
-      >
+<!--      <Transition-->
+<!--          enter-active-class="transition-opacity duration-500 ease-in-out"-->
+<!--          enter-from-class="opacity-0"-->
+<!--          enter-to-class="opacity-100"-->
+<!--          leave-active-class="transition-opacity duration-500 ease-in-out"-->
+<!--          leave-from-class="opacity-100"-->
+<!--          leave-to-class="opacity-0"-->
+<!--      >-->
         <div
-            v-if="currentChoice==='time' && index == 0 || getYear(article) != getYear(articles[index-1])"
+            v-if="currentChoice==='time' && (index == 0 || getYear(article) != getYear(articles[index-1]))"
             class="year-marker relative text-indigo-300 text-2xl pt-3 pb-3">
           {{ getYear(article) }}
         </div>
@@ -80,7 +75,7 @@ function dateFormatToDate(date: Date | DataAnomaly) {
             class="year-marker relative text-indigo-300 text-2xl pt-3 pb-3">
           {{ article.category }}
         </div>
-      </Transition>
+<!--      </Transition>-->
       <div class="flex items-center" @click="toArticlePage(article)">
         <div :title="dateFormatToTime(article.published_at)" class="text-sm w-12">
           {{ dateFormatToDate(article.published_at) }}

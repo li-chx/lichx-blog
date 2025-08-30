@@ -5,13 +5,17 @@ import type { PostMetaData } from '~/types/PostMetaData';
 import useColorModeStore from '~/stores/colorModeStore';
 
 const props = withDefaults(defineProps<{
-  rambling?: PostMetaData;
+  metaData?: PostMetaData;
 }>(),
 {
-  rambling: () => defaultMetaData,
+  metaData: () => defaultMetaData,
 });
-const { data: rawbody } = useAsyncData(async () => (await queryCollection('content').where('id', '=', props.rambling.id).first())?.rawbody);
-const collapsed = ref(false);
+const { data: rawbody } = useAsyncData('simpleCard:' + props.metaData.id, async () => (await queryCollection('content').where('id', '=', props.metaData.id).first())?.rawbody);
+const collapsed = ref(true);
+const typeChinese = new Map<string, string>([
+  ['rambling', '絮语'],
+  ['announcement', '公告'],
+]);
 
 function dateFormat(date: Date | DataAnomaly) {
   if (date === DataAnomaly.DataNotFound || date === DataAnomaly.Invalid) {
@@ -42,7 +46,7 @@ function getCostTime(length: number | DataAnomaly) {
 }
 
 const safeEditorId = computed(() => {
-  const encoded = btoa(encodeURIComponent(props.rambling.id))
+  const encoded = btoa(encodeURIComponent(props.metaData.id))
     .replace(/[+/=]/g, '_'); // 替换 Base64 中的特殊字符
   return `rambling_${encoded}`;
 });
@@ -98,41 +102,48 @@ onUnmounted(() => {
       class="p-5 light:bg-old-neutral-200 dark:bg-old-neutral-800 min-h-64 transition-all duration-500"
       @click="reverseCollapsed">
     <div class="text-4xl">
-      絮语:{{ props.rambling.title }}
+      {{ (typeChinese.get(metaData.type) || 'unknown Type') + '：' }}{{ props.metaData.title }}
     </div>
-    <div class="flex items-center mt-2 max-w-96 overflow-hidden">
+    <div class="flex items-center mt-2 max-w-[400px] overflow-hidden">
 
       <div title="发布时间" class="flex items-center">
         <Icon name="lucide:clock-arrow-up"/>
         <div class="ml-1 text-nowrap">
-          {{ dateFormat(props.rambling.published_at) }}
+          {{ dateFormat(props.metaData.published_at) }}
         </div>
       </div>
 
       <div title="分类" class="flex items-center ml-2">
         <Icon name="material-symbols:category"/>
         <div class="ml-1 text-nowrap">
-          {{ props.rambling.category }}
+          {{ props.metaData.category }}
         </div>
       </div>
 
       <div title="字数" class="flex items-center ml-2">
         <Icon name="fluent:text-word-count-20-filled"/>
         <div class="ml-1 text-nowrap">
-          {{ props.rambling.word_count }}字
+          {{ props.metaData.word_count }}字
         </div>
       </div>
 
       <div title="预计阅读时间" class="flex items-center ml-2">
         <Icon name="octicon:stopwatch-16"/>
         <div class="ml-1 text-nowrap">
-          {{ getCostTime(props.rambling.word_count) }}
+          {{ getCostTime(props.metaData.word_count) }}
+        </div>
+      </div>
+
+      <div v-if="metaData.isPinned" class="flex items-center ml-2">
+        <Icon name="codicon:pinned"/>
+        <div class="ml-1 text-nowrap">
+          置顶
         </div>
       </div>
 
     </div>
     <div
-        class="relative flex mt-2 justify-between overflow-hidden transition-all duration-300 ease-in-out dura"
+        class="relative flex mt-2 justify-between overflow-hidden transition-all duration-300 ease-in-out min-h-[8.5rem]"
         :class="{'max-h-[8.5rem]' : collapsed, 'max-h-[100vh]':!collapsed}">
       <ReadonlyMdEditor
           v-if="rawbody" :editor-id="safeEditorId" :markdown="rawbody!"
@@ -150,19 +161,19 @@ onUnmounted(() => {
     <div class="flex mt-2">
       <div title="创建时间" class="flex items-center">
         <Icon name="lucide:file-clock"/>
-        <div class="ml-1">{{ dateFormat(props.rambling.created_at) }}</div>
+        <div class="ml-1">{{ dateFormat(props.metaData.created_at) }}</div>
       </div>
-      <div v-if="Array.isArray(props.rambling.updated_at)" class="flex items-center ml-2">
+      <div v-if="Array.isArray(props.metaData.updated_at)" class="flex items-center ml-2">
         <Icon name="lucide:clock-alert" title="上次更新时间"/>
         <HoverContent>
           <template #content>
             <div class="ml-1">
-              {{ dateFormat(props.rambling.updated_at[props.rambling.updated_at.length - 1]) }}
+              {{ dateFormat(props.metaData.updated_at[props.metaData.updated_at.length - 1]) }}
             </div>
           </template>
           <template #hoverContent>
             <div class="p-1 pr-2">
-              <div v-for="(date,index) of props.rambling.updated_at" :key="index">
+              <div v-for="(date,index) of props.metaData.updated_at" :key="index">
                 <div class="block whitespace-nowrap">
                   &nbsp;{{ '第' + index + '次更新' + dateFormat(date) }}
                 </div>

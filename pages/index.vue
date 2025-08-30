@@ -61,9 +61,9 @@ import breakpointsHelper from '~/utils/BreakpointsHelper';
       </div>
     </template>
     <template #content>
-      <div>
+      <div class="max-w-full">
         <NuxtRouteAnnouncer/>
-        <NuxtPage/>
+        <NuxtPage class="max-w-full"/>
       </div>
     </template>
     <template #footer>

@@ -28,3 +28,4 @@ pnpm-workspace.yaml
 /client_ chrome.run.xml
 /nuxt.run.xml
 /server_ nuxt.run.xml
+/output.tar.gz

@@ -22,9 +22,13 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
+      title: '随机存取',
       htmlAttrs: {
         lang: 'zh-CN',
       },
+      meta: [
+        { name: 'description', content: 'Lichx 个人博客' },
+      ],
       script: [{ src: '/darkVerify.js' }],
     },
   },

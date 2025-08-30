@@ -5,6 +5,10 @@ export enum DataAnomaly {
   Invalid = 'DataInvalid',
 }
 
+export function equalToDataAnomaly(value: unknown): value is DataAnomaly {
+  return value === DataAnomaly.DataNotFound || value === DataAnomaly.Invalid;
+}
+
 export type PostMetaData = {
   id: string;
   title: string;
@@ -13,6 +17,7 @@ export type PostMetaData = {
   category: string;
   published_at: Date | DataAnomaly;
   draft: boolean;
+  isPinned: boolean;
   updated_at: Date[] | DataAnomaly;
   tags: string[];
   type: string;
@@ -112,6 +117,7 @@ export function toMetaDataType(src: unknown): PostMetaData {
     created_at: created_at,
     published_at: published_at,
     draft: Boolean(data.draft ?? false),
+    isPinned: Boolean(data.isPinned ?? false),
     updated_at: updated_at,
     tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
     tech_stack: tech_stack,
@@ -129,6 +135,7 @@ export const defaultMetaData = toMetaDataType({
   created_at: new Date('2025-01-01T00:00:00Z'), // 默认创建时间
   published_at: new Date('2025-01-01T00:01:00Z'), // 默认发布时间
   draft: true,
+  isPinned: false,
   updated_at: [new Date('2025-01-01T00:02:00Z'), new Date('2025-01-01T00:03:00Z')], // 默认更新时间
   tags: ['C#', 'TS', 'Windows Professional version with Webstorm 2025', 'Windows Professional version with Visual Studio 2022'],
   tech_stack: new Map([
@@ -144,3 +151,30 @@ export const defaultMetaData = toMetaDataType({
     ['C#', 1],
   ]),
 });
+
+export function sortMetaData(metaData: PostMetaData[], key: keyof PostMetaData, considerPining = false, descending = true) {
+  if (key === 'published_at') {
+    return metaData.sort((a, b) => {
+      let aKey: Date | DataAnomaly = a[key] || new Date(0);
+      let bKey: Date | DataAnomaly = b[key] || new Date(0);
+      if (equalToDataAnomaly(aKey)) aKey = new Date(0);
+      if (equalToDataAnomaly(bKey)) bKey = new Date(0);
+      if (considerPining) {
+        if (a.isPinned && !b.isPinned) return -1;
+        if (!a.isPinned && b.isPinned) return 1;
+      }
+      return descending ? bKey.getTime() - aKey.getTime() : aKey.getTime() - bKey.getTime();
+    });
+  }
+  if (key === 'category') {
+    return metaData.sort((a, b) => {
+      const aKey = String(a[key]);
+      const bKey = String(b[key]);
+      if (considerPining) {
+        if (a.isPinned && !b.isPinned) return -1;
+        if (!a.isPinned && b.isPinned) return 1;
+      }
+      return descending ? bKey.localeCompare(aKey) : aKey.localeCompare(bKey);
+    });
+  }
+}

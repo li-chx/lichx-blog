@@ -4,10 +4,10 @@ import { DataAnomaly, defaultMetaData } from '~/types/PostMetaData';
 import type { PostMetaData } from '~/types/PostMetaData';
 import breakpointsHelper from '~/utils/BreakpointsHelper';
 
-const props = withDefaults(defineProps<{
-  article?: PostMetaData;
+withDefaults(defineProps<{
+  metaData?: PostMetaData;
 }>(), {
-  article: () => defaultMetaData,
+  metaData: () => defaultMetaData,
 });
 
 function dateFormat(date: Date | DataAnomaly) {
@@ -51,11 +51,11 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="p-6 pb-0 light:bg-old-neutral-200 dark:bg-old-neutral-800">
+  <div class="p-6 pb-0 light:bg-old-neutral-200 dark:bg-old-neutral-800 transition-colors duration-500">
     <UCollapsible v-model:open="open" :unmount-on-hide="false" class="flex flex-col gap-2 w-full">
       <div class="text-4xl flex justify-between items-center w-full">
         <div class="mb-0 pb-0">
-          {{ props.article.title }}
+          {{ metaData.title }}
         </div>
         <Icon
             name="lucide:chevron-down" class="text-2xl transition-transform duration-300 mr-5"
@@ -68,14 +68,14 @@ onMounted(() => {
               <div title="发布时间" class="flex items-center">
                 <Icon name="lucide:clock-arrow-up"/>
                 <div class="ml-1">
-                  {{ dateFormat(props.article.published_at) }}
+                  {{ dateFormat(metaData.published_at) }}
                 </div>
               </div>
 
               <div title="分类" class="flex items-center ml-2">
                 <Icon name="material-symbols:category"/>
                 <div class="ml-1 inline">
-                  {{ props.article.category }}
+                  {{ metaData.category }}
                 </div>
               </div>
 
@@ -85,14 +85,14 @@ onMounted(() => {
               <div title="字数" class="flex items-center">
                 <Icon name="fluent:text-word-count-20-filled"/>
                 <div class="ml-1 inline">
-                  {{ props.article.word_count }}字
+                  {{ metaData.word_count }}字
                 </div>
               </div>
 
               <div title="预计阅读时间" class="flex items-center ml-2">
                 <Icon name="octicon:stopwatch-16"/>
                 <div class="ml-1 inline">
-                  {{ getCostTime(props.article.word_count) }}
+                  {{ getCostTime(metaData.word_count) }}
                 </div>
               </div>
             </div>
@@ -100,19 +100,19 @@ onMounted(() => {
             <div class="flex">
               <div title="创建时间" class="flex items-center">
                 <Icon name="lucide:file-clock"/>
-                <div class="ml-1">{{ dateFormat(props.article.created_at) }}</div>
+                <div class="ml-1">{{ dateFormat(metaData.created_at) }}</div>
               </div>
-              <div v-if="Array.isArray(props.article.updated_at)" class="flex items-center ml-2">
+              <div v-if="Array.isArray(metaData.updated_at)" class="flex items-center ml-2">
                 <Icon name="lucide:clock-alert" title="上次更新时间"/>
                 <HoverContent>
                   <template #content>
                     <div class="ml-1">
-                      {{ dateFormat(props.article.updated_at[props.article.updated_at.length - 1]) }}
+                      {{ dateFormat(metaData.updated_at[metaData.updated_at.length - 1]) }}
                     </div>
                   </template>
                   <template #hoverContent>
                     <div class="p-1 pr-2">
-                      <div v-for="(date,index) of props.article.updated_at" :key="index">
+                      <div v-for="(date,index) of metaData.updated_at" :key="index">
                         <div class="block whitespace-nowrap">
                           &nbsp;{{ '第' + index + '次更新' + dateFormat(date) }}
                         </div>
@@ -123,9 +123,9 @@ onMounted(() => {
 
               </div>
             </div>
-            <div v-if="Array.isArray(props.article.tags)" class="flex items-center">
+            <div v-if="Array.isArray(metaData.tags)" class="flex items-center">
               <Icon name="clarity:tags-solid"/>
-              <div v-for="(tag,index) of props.article.tags" :key="index">
+              <div v-for="(tag,index) of metaData.tags" :key="index">
                 <div class="ml-1">{{ tag }}</div>
               </div>
             </div>
@@ -140,11 +140,11 @@ onMounted(() => {
           >
             <TechStackCard
                 v-if="breakpointsHelper.greater('lg').value"
-                :async-key="'stack:' + props.article.id"
-                :tech-stack="props.article.tech_stack"
-                :tech-stack-icon-names="props.article.tech_stack_icon_names"
-                :tech-stack-theme-colors="props.article.tech_stack_theme_colors"
-                :tech-stack-percent="props.article.tech_stack_percent"
+                :async-key="'stack:' + metaData.id"
+                :tech-stack="metaData.tech_stack"
+                :tech-stack-icon-names="metaData.tech_stack_icon_names"
+                :tech-stack-theme-colors="metaData.tech_stack_theme_colors"
+                :tech-stack-percent="metaData.tech_stack_percent"
                 class="w-64"
             />
           </Transition>

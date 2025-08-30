@@ -1,16 +1,22 @@
 <script setup lang="ts">
-import { toMetaDataType } from '~/types/PostMetaData';
+import { sortMetaData, toMetaDataType } from '~/types/PostMetaData';
+import type { PostMetaData } from '~/types/PostMetaData';
 import TimeLine from '~/pages/index/archive/components/TimeLine.vue';
+import type { RadioGroupItem } from '@nuxt/ui';
 
-const { data: articles } = useAsyncData(async () => (await queryCollection('content').order('published_at', 'DESC').all()).map((article) => toMetaDataType(article)));
+const { data: srcPostsMetaData } = useAsyncData(async () => sortMetaData((await queryCollection('content').all()).map((x) => toMetaDataType(x)), 'published_at', true));
+const postsMetaData = ref<PostMetaData[]>([]);
 
-const currentChoice = ref('时间');
+const currentChoice = ref<'time' | 'category'>('time');
 
-// onMounted(() => {
-//   setTimeout(() => {
-//     console.log(articles.value);
-//   }, 2000);
-// });
+watch(srcPostsMetaData, () => {
+  postsMetaData.value = srcPostsMetaData.value?.filter((x) => !x.draft) || [];
+});
+
+const choiceItems = ref<RadioGroupItem>([
+  { label: '时间', value: 'time' },
+  { label: '类别', value: 'category' },
+]);
 
 </script>
 <template>
@@ -19,16 +25,16 @@ const currentChoice = ref('时间');
       <div class="sticky top-16 float-left bg-old-neutral-200 dark:bg-old-neutral-800 max-h-[calc(100vh-4rem)]">
         <div class="relative duration-500 transition-all xl:w-80 w-0 mr-2/3 overflow-hidden">
           <div class="w-80 top-0 left-0 text-gray-800 dark:text-white p-5">
-            test123456
+            这里还没想好放什么
           </div>
         </div>
       </div>
       <div
           class="transition-all duration-500 float-right xl:w-[calc(100%-20rem-40px)] w-full bg-old-neutral-200 dark:bg-old-neutral-800 p-5">
         <URadioGroup
-            v-model="currentChoice" orientation="horizontal" variant="table" :items="['时间', '类别']" size="sm"
+            v-model="currentChoice" orientation="horizontal" variant="table" :items="choiceItems as any[]" size="sm"
             class="mb-5"/>
-        <TimeLine v-if="articles" v-model:articles="articles!" :current-choice="currentChoice=== '时间'? 'time' : 'category'"/>
+        <TimeLine v-if="postsMetaData" v-model:metadata="postsMetaData" :current-choice="currentChoice"/>
       </div>
     </div>
   </div>
