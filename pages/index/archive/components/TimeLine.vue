@@ -57,30 +57,21 @@ function dateFormatToDate(date: Date | DataAnomaly) {
     <div
         v-for="(article,index) of articles" :key="article.id"
         class="border-l-2 border-l-old-neutral-400 dark:border-l-old-neutral-500 pl-4">
-<!--      <Transition-->
-<!--          enter-active-class="transition-opacity duration-500 ease-in-out"-->
-<!--          enter-from-class="opacity-0"-->
-<!--          enter-to-class="opacity-100"-->
-<!--          leave-active-class="transition-opacity duration-500 ease-in-out"-->
-<!--          leave-from-class="opacity-100"-->
-<!--          leave-to-class="opacity-0"-->
-<!--      >-->
-        <div
-            v-if="currentChoice==='time' && (index == 0 || getYear(article) != getYear(articles[index-1]))"
-            class="year-marker relative text-indigo-300 text-2xl pt-3 pb-3">
-          {{ getYear(article) }}
-        </div>
-        <div
-            v-else-if="currentChoice==='category' && (index == 0 || article.category != articles[index-1].category)"
-            class="year-marker relative text-indigo-300 text-2xl pt-3 pb-3">
-          {{ article.category }}
-        </div>
-<!--      </Transition>-->
+      <div
+          v-if="currentChoice==='time' && (index == 0 || getYear(article) != getYear(articles[index-1]))"
+          class="year-marker relative text-indigo-300 text-2xl pt-3 pb-3">
+        {{ getYear(article) }}
+      </div>
+      <div
+          v-else-if="currentChoice==='category' && (index == 0 || article.category != articles[index-1].category)"
+          class="year-marker relative text-indigo-300 text-2xl pt-3 pb-3">
+        {{ article.category }}
+      </div>
       <div class="flex items-center" @click="toArticlePage(article)">
-        <div :title="dateFormatToTime(article.published_at)" class="text-sm w-12">
+        <div :title="dateFormatToTime(article.published_at)" class="text-sm min-w-12">
           {{ dateFormatToDate(article.published_at) }}
         </div>
-        <div :title="dateFormatToTime(article.published_at)" class="text-md pl-5">
+        <div :title="dateFormatToTime(article.published_at)" class="text-md ml-10">
           {{ article.title }}
         </div>
       </div>
