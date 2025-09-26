@@ -4,6 +4,9 @@ import useColorModeStore from '~/stores/colorModeStore';
 import { useWindowScroll } from '@vueuse/core';
 
 const { colorMode } = storeToRefs(useColorModeStore());
+watch(colorMode, () => {
+  console.log('colorMode changed:', colorMode.value);
+});
 const isHome = computed(() => useRoute().path === '/');
 const items = ref<NavigationMenuItem[]>([
   {
@@ -41,7 +44,6 @@ onMounted(() => {
 });
 const scrollY = useWindowScroll().y;
 const isScrollDown = ref(false);
-// gsap.registerPlugin(ScrollTrigger);
 
 watch(scrollY, (newY) => {
   if (newY > 0 && !collapsed.value) {
@@ -73,43 +75,45 @@ useRouter().afterEach(() => {
         }"
           @mouseleave="collapsed = true">
         <!-- header -->
-        <Transition
-            enter-active-class="transition-opacity duration-500 ease-in-out"
-            enter-from-class="opacity-0"
-            enter-to-class="opacity-100"
-            leave-active-class="transition-opacity duration-500 ease-in-out"
-            leave-from-class="opacity-100"
-            leave-to-class="opacity-0"
-        >
-          <div
-              v-if="colorMode === 'light'"
-              class="flex h-full w-full absolute bg-[url('/79d52228c770808810a310115567e6790380823a.png')] bg-cover bg-top ">
-            <slot name="header"/>
-          </div>
-          <div
-              v-else
-              class="flex h-full w-full absolute bg-[url('/anime-8788959.jpg')] bg-cover bg-center">
-            <slot name="header"/>
-          </div>
-        </Transition>
-        <!-- header picture -->
-        <Transition
-            enter-active-class="transition-opacity duration-500 ease-in-out"
-            enter-from-class="opacity-0"
-            enter-to-class="opacity-100"
-            leave-active-class="transition-opacity duration-500 ease-in-out"
-            leave-from-class="opacity-100"
-            leave-to-class="opacity-0"
-        >
-          <div v-if="isScrollDown">
+        <client-only>
+          <Transition
+              enter-active-class="transition-opacity duration-500 ease-in-out"
+              enter-from-class="opacity-0"
+              enter-to-class="opacity-100"
+              leave-active-class="transition-opacity duration-500 ease-in-out"
+              leave-from-class="opacity-100"
+              leave-to-class="opacity-0"
+          >
             <div
                 v-if="colorMode === 'light'"
-                class="opacity-80 max-h-[48px] flex w-full h-full fixed bg-[url('/79d52228c770808810a310115567e6790380823a.png')] bg-cover bg-top"/>
+                class="flex h-full w-full absolute bg-[url('/79d52228c770808810a310115567e6790380823a.png')] bg-cover bg-top ">
+              <slot name="header"/>
+            </div>
             <div
                 v-else
-                class="opacity-20 max-h-[48px] flex w-full h-full fixed bg-[url('/anime-8788959.jpg')] bg-cover bg-center"/>
-          </div>
-        </Transition>
+                class="flex h-full w-full absolute bg-[url('/anime-8788959.jpg')] bg-cover bg-center">
+              <slot name="header"/>
+            </div>
+          </Transition>
+          <!-- header picture -->
+          <Transition
+              enter-active-class="transition-opacity duration-500 ease-in-out"
+              enter-from-class="opacity-0"
+              enter-to-class="opacity-100"
+              leave-active-class="transition-opacity duration-500 ease-in-out"
+              leave-from-class="opacity-100"
+              leave-to-class="opacity-0"
+          >
+            <div v-if="isScrollDown">
+              <div
+                  v-if="colorMode === 'light'"
+                  class="opacity-80 max-h-[48px] flex w-full h-full fixed bg-[url('/79d52228c770808810a310115567e6790380823a.png')] bg-cover bg-top"/>
+              <div
+                  v-else
+                  class="opacity-20 max-h-[48px] flex w-full h-full fixed bg-[url('/anime-8788959.jpg')] bg-cover bg-center"/>
+            </div>
+          </Transition>
+        </client-only>
         <!-- navbar -->
         <div
             class="fixed z-10 w-full transition-all duration-500 dark:bg-gray-800/60 bg-old-neutral-50/40 backdrop-blur-sm dark:backdrop-blur-md">
@@ -119,7 +123,13 @@ useRouter().afterEach(() => {
             </div>
             <div
                 class="transition-all duration-500 flex 2xl:w-[1240px] xl:w-[1020px] lg:w-[964px] md:w-[708px] sm:w-[580px] w-10/12">
-              <UNavigationMenu :items="items" :class="colorMode" class="w-full"/>
+              <client-only>
+                <UNavigationMenu :items="items" :class="colorMode" class="w-full"/>
+                <template #fallback>
+                  <!-- 骨架屏/占位内容 -->
+                  <div class="w-full h-12 animate-pulse"></div>
+                </template>
+              </client-only>
             </div>
             <div class="flex-1 overflow-hidden">
               <slot name="navbarRight" :is-scroll-down="isScrollDown"/>

@@ -7,12 +7,6 @@ export default {
   mode: 'jit',
   darkMode: 'class',
   theme: {
-    extend: {
-      colors: {},
-      letterSpacing: {
-        doublewidest: '.2em',
-      },
-    },
     screens: breakpoints,
   },
   plugins: [

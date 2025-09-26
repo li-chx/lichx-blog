@@ -54,7 +54,7 @@ const renderChart = () => {
   const techStackPercent = props.techStackPercent as number[];
   if (!chartRef.value) return;
   const sum = techStackPercent.reduce((acc, val) => acc + val, 0);
-  const fullArr: [string, number, string, string, string][] = techStack.map((name, index) => [name, techStackPercent[index] / sum, techStackLightIconSVG.value[index] || '', techStackDarkIconSVG.value[index] || '', props.techStackThemeColors[index]] as [string, number, string, string, string]).sort((a, b) => b[1] - a[1]);
+  const fullArr: [string, number, string, string, string][] = techStack.map((name, index) => [name, techStackPercent[index]! / sum, techStackLightIconSVG.value[index] || '', techStackDarkIconSVG.value[index] || '', props.techStackThemeColors[index]] as [string, number, string, string, string]).sort((a, b) => b[1] - a[1]);
   const dataArr: [string, number][] = fullArr.map((x) => [x[0], x[1]]);
   const barHeight = 20;
   const gap = 10;
@@ -83,8 +83,8 @@ const renderChart = () => {
       labels: {
         useHTML: true,
         formatter: function () {
-          return `<div style="width: 25px; height: 25px;" title="${fullArr[this.pos][0]}">
-                    ${colorMode.value === 'light' ? fullArr[this.pos][2] : fullArr[this.pos][3]}
+          return `<div style="width: 25px; height: 25px;" title="${fullArr[this.pos]![0]}">
+                    ${colorMode.value === 'light' ? fullArr[this.pos]![2] : fullArr[this.pos]![3]}
                   </div>`;
         },
       },
@@ -114,7 +114,7 @@ const renderChart = () => {
     ],
     tooltip: {
       formatter: function () {
-        return `${fullArr[this.x][0]} ${toPercent(this.y)}`;
+        return `${fullArr[this.x]![0]} ${toPercent(this.y)}`;
       },
     },
     plotOptions: {
@@ -216,7 +216,9 @@ const scrollbarOptions = {
       </svg>
     </div>
     <overlay-scrollbars-component v-else class="max-h-full" :options="scrollbarOptions">
-      <div ref="chartRef" class="w-full"/>
+      <client-only>
+        <div ref="chartRef" class="w-full"/>
+      </client-only>
     </overlay-scrollbars-component>
   </div>
 </template>

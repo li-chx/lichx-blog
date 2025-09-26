@@ -9,7 +9,6 @@ const props = withDefaults(defineProps<{
 }>(), {
   markdown: () => '## Hello World!',
 });
-console.log(props.markdown);
 const eraseHeaderMarkdown = computed(() => props.markdown.replace(/^---[\s\S]*?---\n?/, ''));
 
 const { colorMode } = storeToRefs(useColorModeStore());
@@ -18,7 +17,9 @@ const { colorMode } = storeToRefs(useColorModeStore());
 
 <template>
   <div class="pt-0 bg-old-neutral-200 dark:bg-old-neutral-800 transition-colors duration-500">
-    <MdPreview :editor-id="editorId" :theme="colorMode" :model-value="eraseHeaderMarkdown" class="transition-all duration-500 max-w-full"/>
+    <client-only>
+      <MdPreview :editor-id="editorId" :theme="colorMode" :model-value="eraseHeaderMarkdown" class="transition-all duration-500 max-w-full"/>
+    </client-only>
   </div>
 </template>
 

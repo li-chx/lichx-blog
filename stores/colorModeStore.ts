@@ -1,10 +1,13 @@
-const getInitialMode = () => {
+function getInitialMode(): 'light' | 'dark' {
   if (typeof window !== 'undefined') {
     // 优先用 html 的 class
     if (document.documentElement.classList.contains('dark')) return 'dark';
     if (document.documentElement.classList.contains('light')) return 'light';
     // 其次用 localStorage
-    return localStorage.getItem('system-theme-mode') || 'light';
+    const val = localStorage.getItem('system-theme-mode');
+    if (!!val || (val !== 'light' && val !== 'dark'))
+      return 'light';
+    return val;
   }
   return 'light'; // SSR 默认
 };

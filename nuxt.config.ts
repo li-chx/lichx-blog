@@ -2,7 +2,6 @@
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineNuxtConfig({
-  ssr: false,
   compatibilityDate: '2025-05-15',
   devtools: { enabled: false },
   vite: {
@@ -19,6 +18,7 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
   ui: {
     colorMode: false,
+    fonts: false,
   },
   app: {
     head: {
@@ -32,8 +32,8 @@ export default defineNuxtConfig({
       script: [{ src: '/darkVerify.js' }],
     },
   },
-  sourcemap: {
-    server: true,
-    client: true,
-  },
+  // sourcemap: {
+  //   server: true,
+  //   client: true,
+  // },
 });

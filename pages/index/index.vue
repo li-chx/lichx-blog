@@ -5,35 +5,39 @@ import type { PostMetaData } from '~/types/PostMetaData';
 import SimpleCard from '~/pages/index/components/SimpleCard.vue';
 import ArticleCard from '~/pages/index/components/ArticleCard.vue';
 
-const { data: srcPostsMetaData } = useAsyncData(async () => sortMetaData((await queryCollection('content').all()).map((x) => toMetaDataType(x)), 'published_at', true));
+const srcPostsMetaData = ref<PostMetaData[]>([]);
 const postsMetaData = ref<PostMetaData[]>([]);
+
+async function loadPostsMetaData() {
+  srcPostsMetaData.value = sortMetaData((await queryCollection('content').all()).map((x) => toMetaDataType(x)), 'published_at', true) || [];
+  postsMetaData.value = srcPostsMetaData.value;
+}
+
+await loadPostsMetaData();
+
 function toArticlePage(article: PostMetaData) {
   navigateTo(`/article/${encodeURIComponent(article.id)}`);
 }
+
 watch(srcPostsMetaData, () => {
   postsMetaData.value = srcPostsMetaData.value || [];
 });
 
-//
-// async function loadMetaData() {
-//
-// }
-function filterRuleChange(rule: string) {
-  if (rule === '')
-    postsMetaData.value = srcPostsMetaData.value || [];
-  else
-    postsMetaData.value = (srcPostsMetaData.value || []).filter((post) => post.type === rule);
+function filterRuleChange(rule: (data: PostMetaData) => boolean) {
+  postsMetaData.value = (srcPostsMetaData.value || []).filter(rule);
 }
 </script>
 
 <template>
   <div>
     <div class="table w-full mt-6 table-fixed">
-      <div class="sticky top-16 float-left bg-old-neutral-200 dark:bg-old-neutral-800 max-h-[calc(100vh-4rem)]">
+      <div class="sticky top-16 float-left max-h-[calc(100vh-4rem)]">
         <div class="relative duration-500 transition-all xl:w-80 w-0 overflow-hidden">
-          <div class="w-80 top-0 left-0 text-gray-800 dark:text-white p-5">
-            <PersonalCard
-                v-if="postsMetaData" :posts-meta-data="postsMetaData!"
+          <div class="w-80 top-0 left-0 text-gray-800 dark:text-white">
+<!--            <PersonalCard/>-->
+            <ArticleDescriptionCards
+                v-if="postsMetaData"
+                class="mb-5" :posts-meta-data="srcPostsMetaData!"
                 @filter-rule-change="filterRuleChange"/>
           </div>
         </div>

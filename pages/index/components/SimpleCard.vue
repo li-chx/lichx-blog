@@ -12,12 +12,15 @@ const props = withDefaults(defineProps<{
 });
 const { data: rawbody } = useAsyncData('simpleCard:' + props.metaData.id, async () => (await queryCollection('content').where('id', '=', props.metaData.id).first())?.rawbody);
 const collapsed = ref(true);
-const typeChinese = new Map<string, string>([
+const typeChinese = new Map<string | undefined, string>([
   ['rambling', '絮语'],
   ['announcement', '公告'],
 ]);
 
-function dateFormat(date: Date | DataAnomaly) {
+function dateFormat(date: Date | DataAnomaly | undefined) {
+  if (!date) {
+    return 'date undefined';
+  }
   if (date === DataAnomaly.DataNotFound || date === DataAnomaly.Invalid) {
     return date;
   }
@@ -102,7 +105,7 @@ onUnmounted(() => {
       class="p-5 light:bg-old-neutral-200 dark:bg-old-neutral-800 min-h-64 transition-all duration-500"
       @click="reverseCollapsed">
     <div class="text-4xl">
-      {{ (typeChinese.get(metaData.type) || 'unknown Type') + '：' }}{{ props.metaData.title }}
+      {{ (typeChinese.get(metaData?.type) || 'unknown Type') + '：' }}{{ props.metaData.title }}
     </div>
     <div class="flex items-center mt-2 max-w-[400px] overflow-hidden">
 
@@ -134,7 +137,7 @@ onUnmounted(() => {
         </div>
       </div>
 
-      <div v-if="metaData.isPinned" class="flex items-center ml-2">
+      <div v-if="metaData?.isPinned" class="flex items-center ml-2">
         <Icon name="codicon:pinned"/>
         <div class="ml-1 text-nowrap">
           置顶
@@ -168,7 +171,7 @@ onUnmounted(() => {
         <HoverContent>
           <template #content>
             <div class="ml-1">
-              {{ dateFormat(props.metaData.updated_at[props.metaData.updated_at.length - 1]) }}
+              {{ dateFormat(props.metaData?.updated_at[props.metaData.updated_at.length - 1]) }}
             </div>
           </template>
           <template #hoverContent>

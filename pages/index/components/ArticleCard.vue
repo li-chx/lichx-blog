@@ -3,6 +3,7 @@
 import { DataAnomaly, defaultMetaData } from '~/types/PostMetaData';
 import type { PostMetaData } from '~/types/PostMetaData';
 import breakpointsHelper from '~/utils/BreakpointsHelper';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-vue';
 
 withDefaults(defineProps<{
   metaData?: PostMetaData;
@@ -90,9 +91,9 @@ function getCostTime(length: number | DataAnomaly | undefined) {
 
     </div>
     <div class="flex mt-2 justify-between h-28">
-        <div class="overflow-y-auto">
-          {{ metaData?.description }}
-        </div>
+      <overlay-scrollbars-component>
+        {{ metaData?.description }}
+      </overlay-scrollbars-component>
       <Transition
           enter-active-class="transition-opacity duration-500 ease-in-out"
           enter-from-class="opacity-0"
@@ -111,7 +112,6 @@ function getCostTime(length: number | DataAnomaly | undefined) {
             class="min-w-64"
         />
       </Transition>
-
     </div>
     <hr/>
     <div class="flex mt-2">
@@ -137,7 +137,6 @@ function getCostTime(length: number | DataAnomaly | undefined) {
             </div>
           </template>
         </HoverContent>
-
       </div>
     </div>
     <div v-if="Array.isArray(metaData?.tags)" class="flex items-top">
