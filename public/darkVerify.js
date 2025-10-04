@@ -1,8 +1,6 @@
 // darkVerify.js
 if (
-    localStorage.getItem('system-theme-mode') === "dark" ||
-    (!localStorage.getItem('system-theme-mode') &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches)
+    window.matchMedia("(prefers-color-scheme: dark)").matches
 ) {
     document.querySelector('html').classList.add('dark');
     document.querySelector('html').classList.remove('light');

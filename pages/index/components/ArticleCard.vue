@@ -2,7 +2,6 @@
 
 import { DataAnomaly, defaultMetaData } from '~/types/PostMetaData';
 import type { PostMetaData } from '~/types/PostMetaData';
-import breakpointsHelper from '~/utils/BreakpointsHelper';
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-vue';
 
 withDefaults(defineProps<{
@@ -45,6 +44,11 @@ function getCostTime(length: number | DataAnomaly | undefined) {
     return `${minutes}分钟`;
   }
 }
+
+const mounted = ref(false);
+onMounted(() => {
+  mounted.value = true;
+});
 </script>
 
 <template>
@@ -94,24 +98,17 @@ function getCostTime(length: number | DataAnomaly | undefined) {
       <overlay-scrollbars-component>
         {{ metaData?.description }}
       </overlay-scrollbars-component>
-      <Transition
-          enter-active-class="transition-opacity duration-500 ease-in-out"
-          enter-from-class="opacity-0"
-          enter-to-class="opacity-100"
-          leave-active-class="transition-opacity duration-500 ease-in-out"
-          leave-from-class="opacity-100"
-          leave-to-class="opacity-0"
-      >
-        <TechStackCard
-            v-if="breakpointsHelper.greater('lg').value"
-            :async-key="'stack:' + metaData?.id"
-            :tech-stack="metaData?.tech_stack"
-            :tech-stack-icon-names="metaData?.tech_stack_icon_names"
-            :tech-stack-theme-colors="metaData?.tech_stack_theme_colors"
-            :tech-stack-percent="metaData?.tech_stack_percent"
-            class="min-w-64"
-        />
-      </Transition>
+      <div v-if="mounted" class="">
+          <TechStackCard
+              :async-key="'stack:' + metaData?.id"
+              :tech-stack="metaData?.tech_stack"
+              :tech-stack-icon-names="metaData?.tech_stack_icon_names"
+              :tech-stack-theme-colors="metaData?.tech_stack_theme_colors"
+              :tech-stack-percent="metaData?.tech_stack_percent"
+              class="lg:w-64 w-0 transition-all duration-500"
+          />
+      </div>
+      <div v-else class="min-w-64"/>
     </div>
     <hr/>
     <div class="flex mt-2">

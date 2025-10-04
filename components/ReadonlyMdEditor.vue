@@ -13,13 +13,24 @@ const eraseHeaderMarkdown = computed(() => props.markdown.replace(/^---[\s\S]*?-
 
 const { colorMode } = storeToRefs(useColorModeStore());
 
+const mounted = ref(false);
+
+onMounted(() => {
+  mounted.value = true;
+});
+
 </script>
 
 <template>
   <div class="pt-0 bg-old-neutral-200 dark:bg-old-neutral-800 transition-colors duration-500">
-    <client-only>
-      <MdPreview :editor-id="editorId" :theme="colorMode" :model-value="eraseHeaderMarkdown" class="transition-all duration-500 max-w-full"/>
-    </client-only>
+    <MdPreview
+        v-if="mounted"
+        :key="editorId + '-' + colorMode"
+    :editor-id="editorId"
+    :theme="colorMode"
+    :model-value="eraseHeaderMarkdown"
+    class="transition-all duration-500 max-w-full"
+    />
   </div>
 </template>
 

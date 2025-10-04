@@ -5,12 +5,12 @@ function getInitialMode(): 'light' | 'dark' {
     if (document.documentElement.classList.contains('light')) return 'light';
     // 其次用 localStorage
     const val = localStorage.getItem('system-theme-mode');
-    if (!!val || (val !== 'light' && val !== 'dark'))
-      return 'light';
-    return val;
+    if (val === 'dark') return 'dark';
+    if (val === 'light') return 'light';
+    return 'light'; // 默认
   }
   return 'light'; // SSR 默认
-};
+}
 
 const useColorModeStore = defineStore('colorMode', {
   state: () => ({

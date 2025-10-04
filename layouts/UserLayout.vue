@@ -61,6 +61,11 @@ useRouter().beforeEach(() => {
 useRouter().afterEach(() => {
   isLoading.value = false;
 });
+
+const mounted = ref(false);
+onMounted(() => {
+  mounted.value = true;
+});
 </script>
 
 <template>
@@ -75,7 +80,7 @@ useRouter().afterEach(() => {
         }"
           @mouseleave="collapsed = true">
         <!-- header -->
-        <client-only>
+        <div v-if="mounted">
           <Transition
               enter-active-class="transition-opacity duration-500 ease-in-out"
               enter-from-class="opacity-0"
@@ -113,7 +118,7 @@ useRouter().afterEach(() => {
                   class="opacity-20 max-h-[48px] flex w-full h-full fixed bg-[url('/anime-8788959.jpg')] bg-cover bg-center"/>
             </div>
           </Transition>
-        </client-only>
+        </div>
         <!-- navbar -->
         <div
             class="fixed z-10 w-full transition-all duration-500 dark:bg-gray-800/60 bg-old-neutral-50/40 backdrop-blur-sm dark:backdrop-blur-md">
@@ -123,13 +128,8 @@ useRouter().afterEach(() => {
             </div>
             <div
                 class="transition-all duration-500 flex 2xl:w-[1240px] xl:w-[1020px] lg:w-[964px] md:w-[708px] sm:w-[580px] w-10/12">
-              <client-only>
-                <UNavigationMenu :items="items" :class="colorMode" class="w-full"/>
-                <template #fallback>
-                  <!-- 骨架屏/占位内容 -->
-                  <div class="w-full h-12 animate-pulse"></div>
-                </template>
-              </client-only>
+                <UNavigationMenu v-if="mounted" :items="items" :class="colorMode" class="w-full"/>
+              <div v-else class="w-full h-12 animate-pulse"></div>
             </div>
             <div class="flex-1 overflow-hidden">
               <slot name="navbarRight" :is-scroll-down="isScrollDown"/>

@@ -64,6 +64,7 @@ const renderChart = () => {
     chart: {
       type: 'bar',
       backgroundColor: 'transparent',
+      reflow: false,
     },
     credits: {
       enabled: false,
@@ -127,7 +128,8 @@ const renderChart = () => {
         dataLabels: {
           enabled: true,
           style: {
-            color: '#fff',
+            color: colorMode.value === 'light' ? '#4e4d55' : '#fff',
+            textOutline: 'none',
           },
           formatter: function () {
             return toPercent(this.y); // 自定义条形图值的显示格式
@@ -178,11 +180,15 @@ const scrollbarOptions = {
   },
 };
 
+const mounted = ref(false);
+onMounted(() => {
+  mounted.value = true;
+});
 </script>
 
 <template>
   <div class="h-full">
-    <div v-if="noDataAvailable" class="flex items-center justify-center h-full p-8">
+    <div v-if="!mounted||noDataAvailable" class="flex items-center justify-center h-full p-8">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 112.01">
         <g id="_图层_1" data-name="图层 1">
           <polyline
@@ -216,9 +222,7 @@ const scrollbarOptions = {
       </svg>
     </div>
     <overlay-scrollbars-component v-else class="max-h-full" :options="scrollbarOptions">
-      <client-only>
-        <div ref="chartRef" class="w-full"/>
-      </client-only>
+      <div ref="chartRef" class="w-full"/>
     </overlay-scrollbars-component>
   </div>
 </template>
