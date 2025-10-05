@@ -69,7 +69,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="w-full min-h-[100vh] h-full">
+  <div class="bg-old-neutral-50 dark:bg-[#0b0d0d] w-full min-h-[100vh] h-full transition-colors duration-500">
     <UApp>
       <div
           :class=" (collapsed ? 'h-[20vh]': 'h-[40vh]')"
@@ -147,6 +147,7 @@ onMounted(() => {
         </div>
 
       </div>
+      <!-- content -->
       <div class="flex justify-center items-center  duration-500 bg-white dark:bg-[#16191b] h-full">
         <div
             :class="collapsed ? 'min-h-[80vh]' : 'min-h-[60vh]'"

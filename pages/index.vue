@@ -2,6 +2,12 @@
 import useColorModeStore from '~/stores/colorModeStore';
 import breakpointsHelper from '~/utils/BreakpointsHelper';
 
+const hitokoto = ref('加载中...');
+
+onMounted(async () => {
+  const src = await $fetch<{ hitokoto: string; from_who?: string; from?: string }>('https://v1.hitokoto.cn?c=k');
+  hitokoto.value = `${src.hitokoto} —— ${src.from_who ? src.from_who : '佚名'}${src.from ? `，${src.from}` : '未知来源'}`;
+});
 </script>
 
 <template>
@@ -68,6 +74,9 @@ import breakpointsHelper from '~/utils/BreakpointsHelper';
     </template>
     <template #footer>
       <div class="w-full flex flex-col justify-center items-center p-10 text-old-neutral-500">
+        <div>
+          {{ hitokoto }}
+        </div>
         <div>
           © 2025 随机存取. 由Lichx制作
         </div>

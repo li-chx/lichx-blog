@@ -5,7 +5,6 @@ import ArticleHeader from '~/pages/index/article/[articleID]/components/ArticleH
 
 const articleId = useRoute().params.articleID as string;
 const { data: article } = useAsyncData(async () => await queryCollection('content').where('id', '=', articleId).first());
-
 const editorId = 'article-previewer';
 </script>
 
