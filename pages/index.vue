@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import useColorModeStore from '~/stores/colorModeStore';
 import breakpointsHelper from '~/utils/BreakpointsHelper';
+import ThemeChange from '~/pages/index/components/ThemeChange.vue';
 
 const hitokoto = ref('加载中...');
 
@@ -31,31 +31,8 @@ onMounted(async () => {
     <template #navbarRight>
       <div class="flex items-center h-full">
         <div class="flex-1"/>
-        <div class="flex-1 flex  items-center justify-end duration500 ease-in-out">
-          <Transition
-              mode="out-in"
-              enter-active-class="transition-opacity duration-300 ease-in-out"
-              enter-from-class="opacity-0"
-              enter-to-class="opacity-100"
-              leave-active-class="transition-opacity duration-300 ease-in-out"
-              leave-from-class="opacity-100"
-              leave-to-class="opacity-0"
-          >
-            <Icon
-                v-if="useColorModeStore().colorMode === 'dark'"
-                key="dark"
-                name="material-symbols:dark-mode"
-                class="text-2xl cursor-pointer mr-5"
-                @click="() => useColorModeStore().toggleColorMode()"
-            />
-            <Icon
-                v-else
-                key="light"
-                name="material-symbols:clear-day-rounded"
-                class="text-2xl cursor-pointer mr-5"
-                @click="() => useColorModeStore().toggleColorMode()"
-            />
-          </Transition>
+        <div class="flex-1 flex items-center justify-end ease-in-out">
+          <ThemeChange />
         </div>
       </div>
     </template>

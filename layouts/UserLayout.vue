@@ -69,55 +69,38 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="bg-old-neutral-50 dark:bg-[#0b0d0d] w-full min-h-[100vh] h-full transition-colors duration-500">
+  <div class="bg-old-neutral-50 dark:bg-[#0b0d0d] w-full min-h-[100vh] h-full">
     <UApp>
       <div
           :class=" (collapsed ? 'h-[20vh]': 'h-[40vh]')"
-          class="flex flex-col relative transition-all duration-500 ease-in-out" @mouseenter="() => {
+          class="flex flex-col relative transition-[height] duration-500 max-h-80">
+        <!-- header -->
+        <div
+             v-if="mounted"
+             @mouseenter="() => {
           if(scrollY === 0) {
             collapsed = false;
           }
-        }"
-          @mouseleave="collapsed = true">
-        <!-- header -->
-        <div v-if="mounted">
-          <Transition
-              enter-active-class="transition-opacity duration-500 ease-in-out"
-              enter-from-class="opacity-0"
-              enter-to-class="opacity-100"
-              leave-active-class="transition-opacity duration-500 ease-in-out"
-              leave-from-class="opacity-100"
-              leave-to-class="opacity-0"
-          >
+        }" @mouseleave="collapsed = true">
+          <div
+              v-if="colorMode === 'light'"
+              class="flex w-full h-full absolute bg-[url('/79d52228c770808810a310115567e6790380823a.png')] bg-cover bg-top ">
+            <slot name="header"/>
+          </div>
+          <div
+              v-else
+              class="flex w-full h-full max-h-80 absolute bg-[url('/anime-8788959.webp')] bg-cover bg-center">
+            <slot name="header"/>
+          </div>
+          <!-- header picture -->
+          <div v-if="isScrollDown">
             <div
                 v-if="colorMode === 'light'"
-                class="flex h-full w-full absolute bg-[url('/79d52228c770808810a310115567e6790380823a.png')] bg-cover bg-top ">
-              <slot name="header"/>
-            </div>
+                class="opacity-80 max-h-[48px] flex w-full h-full fixed bg-[url('/79d52228c770808810a310115567e6790380823a.webp')] bg-cover bg-top"/>
             <div
                 v-else
-                class="flex h-full w-full absolute bg-[url('/anime-8788959.jpg')] bg-cover bg-center">
-              <slot name="header"/>
-            </div>
-          </Transition>
-          <!-- header picture -->
-          <Transition
-              enter-active-class="transition-opacity duration-500 ease-in-out"
-              enter-from-class="opacity-0"
-              enter-to-class="opacity-100"
-              leave-active-class="transition-opacity duration-500 ease-in-out"
-              leave-from-class="opacity-100"
-              leave-to-class="opacity-0"
-          >
-            <div v-if="isScrollDown">
-              <div
-                  v-if="colorMode === 'light'"
-                  class="opacity-80 max-h-[48px] flex w-full h-full fixed bg-[url('/79d52228c770808810a310115567e6790380823a.png')] bg-cover bg-top"/>
-              <div
-                  v-else
-                  class="opacity-20 max-h-[48px] flex w-full h-full fixed bg-[url('/anime-8788959.jpg')] bg-cover bg-center"/>
-            </div>
-          </Transition>
+                class="opacity-20 max-h-[48px] flex w-full h-full fixed bg-[url('/anime-8788959.webp')] bg-cover bg-center"/>
+          </div>
         </div>
         <!-- navbar -->
         <div
@@ -127,8 +110,8 @@ onMounted(() => {
               <slot name="navbarLeft" :is-scroll-down="isScrollDown"/>
             </div>
             <div
-                class="transition-all duration-500 flex 2xl:w-[1240px] xl:w-[1020px] lg:w-[964px] md:w-[708px] sm:w-[580px] w-10/12">
-                <UNavigationMenu v-if="mounted" :items="items" :class="colorMode" class="w-full"/>
+                class="transition-[width] duration-500 flex 2xl:w-[1240px] xl:w-[1020px] lg:w-[964px] md:w-[708px] sm:w-[580px] w-10/12">
+              <UNavigationMenu v-if="mounted" :items="items" :class="colorMode" class="w-full"/>
               <div v-else class="w-full h-12 animate-pulse"></div>
             </div>
             <div class="flex-1 overflow-hidden">
@@ -148,10 +131,10 @@ onMounted(() => {
 
       </div>
       <!-- content -->
-      <div class="flex justify-center items-center  duration-500 bg-white dark:bg-[#16191b] h-full">
+      <div class="flex justify-center items-center bg-white dark:bg-[#16191b] h-full">
         <div
             :class="collapsed ? 'min-h-[80vh]' : 'min-h-[60vh]'"
-            class="transition-all duration-500 ease-in-out 2xl:w-[1240px] xl:w-[1020px] lg:w-[964px] md:w-[708px] sm:w-[580px] w-11/12">
+            class="transition-[width] duration-500 ease-in-out 2xl:w-[1240px] xl:w-[1020px] lg:w-[964px] md:w-[708px] sm:w-[580px] w-11/12">
           <slot name="content"/>
         </div>
       </div>

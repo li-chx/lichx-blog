@@ -2,7 +2,6 @@
 
 import { DataAnomaly, defaultMetaData } from '~/types/PostMetaData';
 import type { PostMetaData } from '~/types/PostMetaData';
-import useColorModeStore from '~/stores/colorModeStore';
 
 const props = withDefaults(defineProps<{
   metaData?: PostMetaData;
@@ -54,55 +53,25 @@ const safeEditorId = computed(() => {
   return `rambling_${encoded}`;
 });
 
-const showLightShadow = ref(false);
-const showDarkShadow = ref(false);
+const showShadow = ref(true);
 
 function reverseCollapsed() {
   if (collapsed.value) {
     collapsed.value = false;
     return;
   }
-  const showLight = showLightShadow.value;
-  const showDark = showDarkShadow.value;
-  showLightShadow.value = false;
-  showDarkShadow.value = false;
   collapsed.value = true;
+  showShadow.value = false;
   setTimeout(() => {
-    showLightShadow.value = showLight;
-    showDarkShadow.value = showDark;
+    showShadow.value = true;
   }, 500);
 }
 
-const colorModeStore = useColorModeStore();
-let colorModeCallBackKey = '';
-onMounted(() => {
-  if (colorModeStore.colorMode === 'light') {
-    showLightShadow.value = true;
-  } else {
-    showDarkShadow.value = true;
-  }
-  colorModeCallBackKey = colorModeStore.registerCallBack(() => {
-    if (colorModeStore.colorMode === 'light') {
-      setTimeout(() => {
-        showLightShadow.value = true;
-      }, 500);
-      showDarkShadow.value = false;
-    } else {
-      showLightShadow.value = false;
-      setTimeout(() => {
-        showDarkShadow.value = true;
-      }, 500);
-    }
-  });
-});
-onUnmounted(() => {
-  colorModeStore.unregisterCallBack(colorModeCallBackKey);
-});
 </script>
 
 <template>
   <div
-      class="p-5 light:bg-old-neutral-200 dark:bg-old-neutral-800 min-h-64 transition-all duration-500"
+      class="p-5 light:bg-old-neutral-200 dark:bg-old-neutral-800 min-h-64"
       @click="reverseCollapsed">
     <div class="text-4xl">
       {{ (typeChinese.get(metaData?.type) || 'unknown Type') + '：' }}{{ props.metaData.title }}
@@ -146,18 +115,14 @@ onUnmounted(() => {
 
     </div>
     <div
-        class="relative flex mt-2 justify-between overflow-hidden transition-all duration-300 ease-in-out min-h-[8.5rem]"
+        class="relative flex mt-2 justify-between overflow-hidden duration-300 ease-in-out min-h-[8.5rem]"
         :class="{'max-h-[8.5rem]' : collapsed, 'max-h-[100vh]':!collapsed}">
       <ReadonlyMdEditor
           v-if="rawbody" :editor-id="safeEditorId" :markdown="rawbody!"
-          class="transition-all duration-500 w-full"/>
+          class="w-full"/>
       <div
-          class="absolute bottom-0 left-0 right-0 h-14 bg-gradient-to-t from-old-neutral-200 to-transparent pointer-events-none transition-opacity duration-300"
-          :class="collapsed&&showLightShadow?'opacity-100':'opacity-0'"
-      />
-      <div
-          class="absolute bottom-0 left-0 right-0 h-14 bg-gradient-to-t from-old-neutral-800  to-transparent pointer-events-none transition-opacity duration-300"
-          :class="collapsed&&showDarkShadow?'opacity-100':'opacity-0'"
+          class="absolute bottom-0 left-0 right-0 h-14 bg-gradient-to-t from-old-neutral-200 dark:from-old-neutral-800  to-transparent pointer-events-none transition-opacity duration-300"
+          :class="collapsed && showShadow?'opacity-100':'opacity-0'"
       />
     </div>
     <hr/>

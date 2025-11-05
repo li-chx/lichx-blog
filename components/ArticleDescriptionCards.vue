@@ -143,7 +143,7 @@ function updateRule() {
 
 <template>
   <div>
-    <div class="bg-old-neutral-200 dark:bg-old-neutral-800 transition-colors duration-500 p-5">
+    <div class="bg-old-neutral-200 dark:bg-old-neutral-800 p-5">
       <div class="text-2xl ml-1 flex items-center">
         <Icon class="mr-2" name="material-symbols:category"/>
         类型
@@ -162,7 +162,7 @@ function updateRule() {
         </div>
       </div>
     </div>
-    <div class="bg-old-neutral-200 dark:bg-old-neutral-800 transition-colors duration-500 p-5 mt-4">
+    <div class="bg-old-neutral-200 dark:bg-old-neutral-800 p-5 mt-4">
       <div class="text-2xl ml-1 flex items-center">
         <Icon class="mr-2" name="material-symbols:book"/>
         分类
@@ -185,7 +185,7 @@ function updateRule() {
         <div>{{ count }}</div>
       </div>
     </div>
-    <div class="bg-old-neutral-200 dark:bg-old-neutral-800 transition-colors duration-500 p-5 mt-4">
+    <div class="bg-old-neutral-200 dark:bg-old-neutral-800 p-5 mt-4">
       <div class="text-2xl ml-1 flex items-center">
         <Icon class="mr-2" name="material-symbols:bookmarks"/>
         标签
@@ -194,7 +194,7 @@ function updateRule() {
       <div class="flex flex-wrap">
         <div
             v-for="([name,count],index) of tags" :key="index"
-            class="flex items-center justify-between text-[15px] pl-2 pr-2 m-1 rounded-2xl shadow-[0_0_0_1px_#888] hover:text-sky-400 dark:hover:text-[#cccaff] hover:shadow-[0_0_0_1px_#00bcff] dark:hover:shadow-[0_0_0_1px_#cccaff] transition-all duration-300"
+            class="flex items-center justify-between text-[15px] pl-2 pr-2 m-1 rounded-2xl shadow-[0_0_0_1px_#888] hover:text-sky-400 dark:hover:text-[#cccaff] hover:shadow-[0_0_0_1px_#00bcff] dark:hover:shadow-[0_0_0_1px_#cccaff] transition-shadow duration-300"
             :class="{'text-old-neutral-400': !tagsEnableStatus[index]}"
             @click="updateTagEnableStatus(index)"
         >

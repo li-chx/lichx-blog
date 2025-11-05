@@ -11,18 +11,18 @@ onMounted(() => {
 
 <template>
   <div>
-    <div class="light:bg-old-neutral-200 dark:bg-old-neutral-800 p-5 mt-3 transition-colors duration-300">
+    <div class="light:bg-old-neutral-200 dark:bg-old-neutral-800 p-5 mt-3">
       <div class="text-2xl pb-2">关于作者</div>
       lichx，目前就读于武汉理工大学，技术涉猎广泛但不精，仍在持续学习中 <br/>
     </div>
-    <div class="light:bg-old-neutral-200 dark:bg-old-neutral-800 p-5 mt-3 transition-colors duration-300">
+    <div class="light:bg-old-neutral-200 dark:bg-old-neutral-800 p-5 mt-3">
       <div class="text-2xl pb-2">技术栈（相对熟练度）</div>
       <TechStackCard
           v-if="mounted" async-key="about page" :tech-stack="techStack"
           :tech-stack-percent="techStackPercent" :tech-stack-icon-names="techStackIconNames"
           :tech-stack-theme-colors="techStackThemeColors"/>
     </div>
-    <div class="light:bg-old-neutral-200 dark:bg-old-neutral-800 p-5 mt-3 transition-colors duration-300">
+    <div class="light:bg-old-neutral-200 dark:bg-old-neutral-800 p-5 mt-3">
       <div class="text-2xl pb-2">在其他渠道关注 / 联系我</div>
       <a href="https://github.com/li-chx" title="github，不常用">
         <icon name="mdi:github" class="inline-block w-10 h-10 mr-4"/>

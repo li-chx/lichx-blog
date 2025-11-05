@@ -22,14 +22,14 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="pt-0 bg-old-neutral-200 dark:bg-old-neutral-800 transition-colors duration-500">
+  <div class="pt-0 bg-old-neutral-200 dark:bg-old-neutral-800">
     <MdPreview
         v-if="mounted"
         :key="editorId + '-' + colorMode"
     :editor-id="editorId"
     :theme="colorMode"
     :model-value="eraseHeaderMarkdown"
-    class="transition-all duration-500 max-w-full"
+    class="max-w-full"
     />
   </div>
 </template>

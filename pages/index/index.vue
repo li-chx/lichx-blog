@@ -33,7 +33,7 @@ function filterRuleChange(rule: (data: PostMetaData) => boolean) {
   <div>
     <div class="table w-full mt-6 table-fixed">
       <div class="sticky top-16 float-left max-h-[calc(100vh-4rem)]">
-        <div class="relative duration-500 transition-all xl:w-80 w-0 overflow-hidden">
+        <div class="relative duration-500 transition-[width] xl:w-80 w-0 overflow-hidden">
           <div class="w-80 top-0 left-0 text-gray-800 dark:text-white">
             <ArticleDescriptionCards
                 v-if="postsMetaData"
@@ -42,7 +42,7 @@ function filterRuleChange(rule: (data: PostMetaData) => boolean) {
           </div>
         </div>
       </div>
-      <div class="transition-all duration-500 float-right xl:w-[calc(100%-20rem-40px)] w-full">
+      <div class="transition-[width] duration-500 float-right xl:w-[calc(100%-20rem-40px)] w-full">
         <!--        <ArticleCard class="mb-6 w-full transition-shadow duration-300 shadow-lg hover:shadow-old-neutral-600"/>-->
         <div
             v-for="post in postsMetaData" :key="post.id"
@@ -64,7 +64,7 @@ function filterRuleChange(rule: (data: PostMetaData) => boolean) {
         </div>
         <div v-if="postsMetaData.length === 0" class="w-full">
           <div
-              class="w-full light:bg-old-neutral-200 dark:bg-old-neutral-800 transition-all duration-300 shadow-lg hover:shadow-old-neutral-600 hover:cursor-pointer">
+              class="w-full light:bg-old-neutral-200 dark:bg-old-neutral-800 transition-shadow duration-300 shadow-lg hover:shadow-old-neutral-600 hover:cursor-pointer">
               <div class="pt-5 text-center text-2xl">
                 没有找到符合条件的文章
               </div>

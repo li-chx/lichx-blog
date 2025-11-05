@@ -4,7 +4,7 @@
 
 <template>
 <div>
-  <div class="bg-old-neutral-200 dark:bg-old-neutral-800 transition-colors duration-500 p-5">
+  <div class="bg-old-neutral-200 dark:bg-old-neutral-800 p-5">
     Author: Lichx
     <div>
     Contact me:

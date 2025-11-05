@@ -52,7 +52,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="p-5 light:bg-old-neutral-200 dark:bg-old-neutral-800 min-h-64 transition-all duration-500">
+  <div class="p-5 light:bg-old-neutral-200 dark:bg-old-neutral-800 min-h-64">
     <div class="text-4xl">
       {{ metaData?.title }}
     </div>
@@ -105,7 +105,7 @@ onMounted(() => {
               :tech-stack-icon-names="metaData?.tech_stack_icon_names"
               :tech-stack-theme-colors="metaData?.tech_stack_theme_colors"
               :tech-stack-percent="metaData?.tech_stack_percent"
-              class="lg:w-64 w-0 transition-all duration-500"
+              class="lg:w-64 w-0 transition-[width] duration-500"
           />
       </div>
       <div v-else class="min-w-64"/>

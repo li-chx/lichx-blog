@@ -51,7 +51,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="p-6 pb-0 light:bg-old-neutral-200 dark:bg-old-neutral-800 transition-colors duration-500">
+  <div class="p-6 pb-0 light:bg-old-neutral-200 dark:bg-old-neutral-800">
     <UCollapsible v-model:open="open" :unmount-on-hide="false" class="flex flex-col gap-2 w-full">
       <div class="text-4xl flex justify-between items-center w-full">
         <div class="mb-0 pb-0">
