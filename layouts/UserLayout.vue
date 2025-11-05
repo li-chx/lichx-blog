@@ -84,7 +84,7 @@ onMounted(() => {
         }" @mouseleave="collapsed = true">
           <div
               v-if="colorMode === 'light'"
-              class="flex w-full h-full absolute bg-[url('/79d52228c770808810a310115567e6790380823a.png')] bg-cover bg-top ">
+              class="flex w-full h-full absolute bg-[url('/79d52228c770808810a310115567e6790380823a.webp')] bg-cover bg-top ">
             <slot name="header"/>
           </div>
           <div
