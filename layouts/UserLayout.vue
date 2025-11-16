@@ -4,9 +4,7 @@ import useColorModeStore from '~/stores/colorModeStore';
 import { useWindowScroll } from '@vueuse/core';
 
 const { colorMode } = storeToRefs(useColorModeStore());
-watch(colorMode, () => {
-  console.log('colorMode changed:', colorMode.value);
-});
+
 const isHome = computed(() => useRoute().path === '/');
 const items = ref<NavigationMenuItem[]>([
   {
@@ -84,12 +82,12 @@ onMounted(() => {
         }" @mouseleave="collapsed = true">
           <div
               v-if="colorMode === 'light'"
-              class="flex w-full h-full absolute bg-[url('/79d52228c770808810a310115567e6790380823a.webp')] bg-cover bg-top ">
+              class="flex bg-top absolute w-full h-full bg-[url('/79d52228c770808810a310115567e6790380823a.webp')] ">
             <slot name="header"/>
           </div>
           <div
               v-else
-              class="flex w-full h-full max-h-80 absolute bg-[url('/anime-8788959.webp')] bg-cover bg-center">
+              class="flex bg-top absolute w-full h-full bg-[url('/anime-8788959.webp')]">
             <slot name="header"/>
           </div>
           <!-- header picture -->
