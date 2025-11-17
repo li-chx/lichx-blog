@@ -4,6 +4,9 @@ export function rgbToHsl(rgb: number[]) {
     throw new Error('Input must be an array of three numbers representing RGB values.');
   }
   let [r, g, b] = rgb;
+  r = r!;
+  b = b!;
+  g = g!;
   r /= 255;
   g /= 255;
   b /= 255;
@@ -36,6 +39,9 @@ export function hslToRgb(hsl: number[]) {
     throw new Error('Input must be an array of three numbers representing HSL values.');
   }
   let [h, s, l] = hsl;
+  h = h!;
+  s = s!;
+  l = l!;
   h /= 360;
   s /= 100;
   l /= 100;
@@ -65,16 +71,16 @@ export function toRGBArray(color: string): number[] {
   // 处理 rgb/rgba
   const rgbMatch = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d.]+)?\)/);
   if (rgbMatch) {
-    return [parseInt(rgbMatch[1]), parseInt(rgbMatch[2]), parseInt(rgbMatch[3])];
+    return [parseInt(rgbMatch[1]!), parseInt(rgbMatch[2]!), parseInt(rgbMatch[3]!)];
   }
   // 处理 #fff 或 #ffffff
   const hexMatch = color.match(/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/);
   if (hexMatch) {
     let hex = hexMatch[1];
-    if (hex.length === 3) {
-      hex = hex.split('').map((x) => x + x).join('');
+    if (hex!.length === 3) {
+      hex = hex!.split('').map((x) => x + x).join('');
     }
-    const num = parseInt(hex, 16);
+    const num = parseInt(hex!, 16);
     return [
       (num >> 16) & 255,
       (num >> 8) & 255,
@@ -97,14 +103,14 @@ export function toHexString(rgb: number[]): string {
 
 export function toLightColor(rgb: number[]): number[] {
   const hsl = rgbToHsl(rgb);
-  if (hsl[2] < 50)
-    hsl[2] = hsl[2] / 5 + 50; // 增加亮度
+  if (hsl[2]! < 50)
+    hsl[2] = hsl[2]! / 5 + 50; // 增加亮度
   return hslToRgb(hsl);
 }
 
 export function toDarkColor(rgb: number[]): number[] {
   const hsl = rgbToHsl(rgb);
-  if (hsl[2] > 50)
-    hsl[2] = 50 - (hsl[2] - 50) / 5; // 减少亮度
+  if (hsl[2]! > 50)
+    hsl[2] = 50 - (hsl[2]! - 50) / 5; // 减少亮度
   return hslToRgb(hsl);
 }
