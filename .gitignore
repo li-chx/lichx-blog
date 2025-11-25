@@ -29,3 +29,4 @@ pnpm-workspace.yaml
 /nuxt.run.xml
 /server_ nuxt.run.xml
 /output.tar.gz
+.pnpm-store
