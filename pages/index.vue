@@ -60,6 +60,16 @@ onMounted(async () => {
         <div>
           蒙ICP备2025022865号
         </div>
+        <div class="flex items-center justify-center w-full">
+          <img src="/logo01.6189a29f.png" alt="警徽图" class="w-5"/>
+          <a
+              href="https://beian.mps.gov.cn/#/query/webSearch?code=15020202000411"
+              target="_blank"
+              rel="noreferrer"
+              class="hover:text-old-neutral-700 dark:hover:text-old-neutral-300">
+            蒙公网安备15020202000411号
+          </a>
+        </div>
       </div>
     </template>
   </NuxtLayout>
