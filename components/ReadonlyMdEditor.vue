@@ -31,6 +31,12 @@ onMounted(() => {
     :model-value="eraseHeaderMarkdown"
     class="max-w-full"
     />
+    <div v-else class="w-5/6">
+      <USkeleton class="h-4 mb-3 w-full bg-old-neutral-600"/>
+      <USkeleton class="h-4 mb-3 w-full bg-old-neutral-600"/>
+      <USkeleton class="h-4 mb-3 w-full bg-old-neutral-600"/>
+      <USkeleton class="h-4 mb-3 w-full bg-old-neutral-600"/>
+    </div>
   </div>
 </template>
 

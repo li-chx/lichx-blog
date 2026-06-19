@@ -115,13 +115,13 @@ function reverseCollapsed() {
 
     </div>
     <div
-        class="relative flex mt-2 justify-between overflow-hidden duration-300 ease-in-out min-h-[8.5rem]"
-        :class="{'max-h-[8.5rem]' : collapsed, 'max-h-[100vh]':!collapsed}">
+        class="relative flex mt-2 justify-between overflow-hidden duration-300 ease-in-out min-h-34"
+        :class="{'max-h-34' : collapsed, 'max-h-screen':!collapsed}">
       <ReadonlyMdEditor
           v-if="rawbody" :editor-id="safeEditorId" :markdown="rawbody!"
           class="w-full"/>
       <div
-          class="absolute bottom-0 left-0 right-0 h-14 bg-gradient-to-t from-old-neutral-200 dark:from-old-neutral-800  to-transparent pointer-events-none transition-opacity duration-300"
+          class="absolute bottom-0 left-0 right-0 h-14 bg-linear-to-t from-old-neutral-200 dark:from-old-neutral-800  to-transparent pointer-events-none transition-opacity duration-300"
           :class="collapsed && showShadow?'opacity-100':'opacity-0'"
       />
     </div>

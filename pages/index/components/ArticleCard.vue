@@ -95,18 +95,23 @@ onMounted(() => {
 
     </div>
     <div class="flex mt-2 justify-between h-28">
-      <overlay-scrollbars-component>
+      <overlay-scrollbars-component v-if="mounted">
         {{ metaData?.description }}
       </overlay-scrollbars-component>
+      <div v-else class="w-4/5">
+        <USkeleton class="h-4 mb-3 w-full bg-old-neutral-600"/>
+        <USkeleton class="h-4 mb-3 w-full bg-old-neutral-600"/>
+        <USkeleton class="h-4 mb-3 w-full bg-old-neutral-600"/>
+      </div>
       <div v-if="mounted" class="">
-          <TechStackCard
-              :async-key="'stack:' + metaData?.id"
-              :tech-stack="metaData?.tech_stack"
-              :tech-stack-icon-names="metaData?.tech_stack_icon_names"
-              :tech-stack-theme-colors="metaData?.tech_stack_theme_colors"
-              :tech-stack-percent="metaData?.tech_stack_percent"
-              class="lg:w-64 w-0 transition-[width] duration-500"
-          />
+        <TechStackCard
+            :async-key="'stack:' + metaData?.id"
+            :tech-stack="metaData?.tech_stack"
+            :tech-stack-icon-names="metaData?.tech_stack_icon_names"
+            :tech-stack-theme-colors="metaData?.tech_stack_theme_colors"
+            :tech-stack-percent="metaData?.tech_stack_percent"
+            class="lg:w-64 w-0 transition-[width] duration-500"
+        />
       </div>
       <div v-else class="min-w-64"/>
     </div>

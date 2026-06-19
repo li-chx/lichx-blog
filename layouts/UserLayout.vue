@@ -67,11 +67,11 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="bg-old-neutral-50 dark:bg-[#0b0d0d] w-full min-h-[100vh] h-full">
+  <div class="bg-old-neutral-50 dark:bg-[#0b0d0d] w-full min-h-screen h-full">
     <UApp>
       <div
           :class=" (collapsed ? 'h-[20vh]': 'h-[40vh]')"
-          class="flex flex-col relative transition-[height] duration-500 max-h-80">
+          class="flex flex-col relative transition-[height] duration-500 max-h-80 min-h-40">
         <!-- header -->
         <div
              v-if="mounted"
@@ -94,10 +94,10 @@ onMounted(() => {
           <div v-if="isScrollDown">
             <div
                 v-if="colorMode === 'light'"
-                class="opacity-80 max-h-[48px] flex w-full h-full fixed bg-[url('/79d52228c770808810a310115567e6790380823a.webp')] bg-cover bg-top"/>
+                class="opacity-80 max-h-12 flex w-full h-full fixed bg-[url('/79d52228c770808810a310115567e6790380823a.webp')] bg-cover bg-top"/>
             <div
                 v-else
-                class="opacity-20 max-h-[48px] flex w-full h-full fixed bg-[url('/anime-8788959.webp')] bg-cover bg-center"/>
+                class="opacity-20 max-h-12 flex w-full h-full fixed bg-[url('/anime-8788959.webp')] bg-cover bg-center"/>
           </div>
         </div>
         <!-- navbar -->
