@@ -33,6 +33,17 @@ export default defineNuxtConfig({
       script: [{ src: '/darkVerify.js' }],
     },
   },
+  icon: {
+    provider: 'server',
+    serverBundle: 'local',
+
+    fallbackToApi: true,
+
+    clientBundle: {
+      scan: true,
+      icons: [],
+    },
+  },
   // sourcemap: {
   //   server: true,
   //   client: true,

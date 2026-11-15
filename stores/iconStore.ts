@@ -1,3 +1,7 @@
+import { loadIcon } from '@iconify/vue';
+import { iconToHTML, iconToSVG, replaceIDs } from '@iconify/utils';
+
+// call await set first, then call getIcon or getColoredIcon
 const useIconStore = defineStore('icon', {
   state: () => ({
     iconCache: new Map<string, string>(),
@@ -30,40 +34,28 @@ const useIconStore = defineStore('icon', {
         });
       }
       this.addingSet.add(iconName);
-      if (iconData === undefined || iconData === null || iconData === '') {
-        this.iconCache.set(iconName, await fetchSvg(iconName));
-      } else
-        this.iconCache.set(iconName, iconData as string);
+      if (!iconData) {
+        try {
+          const data = await loadIcon(iconName);
+          const { body, attributes } = iconToSVG(data, {
+            width: '100%',
+            height: '100%',
+          });
+
+          iconData = iconToHTML(replaceIDs(body), attributes);
+        } catch (e) {
+          console.error(e);
+          iconData = '';
+        }
+      }
+      if (iconData) {
+        this.iconCache.set(iconName, iconData);
+      }
       this.addingSet.delete(iconName);
       this.waitingCallbackFunctions.get(iconName)?.forEach((callback) => callback());
       this.waitingCallbackFunctions.delete(iconName);
     },
-
   },
 });
+
 export default useIconStore;
-
-export async function fetchSvg(svgName: string, maxRetries = 3) {
-  const iconifyUrl = 'https://api.iconify.design/';
-
-  for (let attempt = 1; attempt <= maxRetries; attempt++) {
-    try {
-      return await (await $fetch<Blob>(iconifyUrl + svgName + '.svg', {
-        method: 'GET',
-        params: {
-          width: '100%',
-        },
-      })).text();
-    } catch (error) {
-      console.warn(`Attempt ${attempt} failed for ${svgName}:`, error);
-
-      if (attempt === maxRetries) {
-        console.error(`All ${maxRetries} attempts failed for ${svgName}`);
-      }
-
-      // 等待一段时间后重试（可选）
-      await new Promise((resolve) => setTimeout(resolve, 1000 * attempt));
-    }
-  }
-  return '<svg></svg>';
-}

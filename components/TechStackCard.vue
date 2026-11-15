@@ -5,8 +5,6 @@ import { DataAnomaly } from '~/types/PostMetaData';
 import 'overlayscrollbars/overlayscrollbars.css';
 import useColorModeStore from '~/stores/colorModeStore';
 import useIconStore from '~/stores/iconStore';
-import { OverlayScrollbarsComponent } from 'overlayscrollbars-vue';
-import type { OverflowBehavior, ScrollbarsAutoHideBehavior, ScrollbarsVisibilityBehavior } from 'overlayscrollbars';
 
 const props = withDefaults(defineProps<{
   asyncKey: string;
@@ -26,7 +24,7 @@ const techStackLightIconSVG = ref<string[]>([]);
 const techStackDarkIconSVG = ref<string[]>([]);
 const { colorMode } = storeToRefs(useColorModeStore());
 
-// 没有这个asyncKey会加载不出正确的图标
+// 没有这个 asyncKey 会加载不出正确的图标
 const { pending } = useAsyncData(props.asyncKey, async () => {
   if (props.techStackIconNames === DataAnomaly.DataNotFound || props.techStackIconNames === DataAnomaly.Invalid)
     return [];
@@ -64,7 +62,7 @@ const renderChart = () => {
     chart: {
       type: 'bar',
       backgroundColor: 'transparent',
-      reflow: false,
+      reflow: true,
     },
     credits: {
       enabled: false,
@@ -165,21 +163,6 @@ onUnmounted(() => {
   useColorModeStore().unregisterCallBack(colorModeCallBackKey);
 });
 
-const scrollbarOptions = {
-  scrollbars: {
-    theme: 'os-theme-thin-dark',
-    visibility: 'auto' as ScrollbarsVisibilityBehavior,
-    autoHide: 'move' as ScrollbarsAutoHideBehavior,
-    autoHideDelay: 1300,
-    dragScroll: true,
-    clickScroll: true,
-  },
-  overflow: {
-    x: 'hidden' as OverflowBehavior,
-    y: 'scroll' as OverflowBehavior,
-  },
-};
-
 const mounted = ref(false);
 onMounted(() => {
   mounted.value = true;
@@ -221,29 +204,8 @@ onMounted(() => {
         </g>
       </svg>
     </div>
-    <overlay-scrollbars-component v-else class="max-h-full" :options="scrollbarOptions">
+    <easy-scroll-bar v-else class="max-h-full max-w-full">
       <div ref="chartRef" class="w-full"/>
-    </overlay-scrollbars-component>
+    </easy-scroll-bar>
   </div>
 </template>
-
-<style scoped>
-
-:deep(.os-scrollbar) {
-  --os-size: 4px;
-  --os-padding-perpendicular: 0px;
-  --os-padding-axis: 0px;
-  --os-track-border-radius: 2px;
-  --os-handle-border-radius: 2px;
-  --os-handle-bg: rgba(156, 163, 175, 0.5);
-  --os-handle-bg-hover: rgba(156, 163, 175, 0.8);
-  --os-handle-bg-active: rgba(107, 114, 128, 1);
-}
-
-/* 暗色模式 */
-.dark :deep(.os-scrollbar) {
-  --os-handle-bg: rgba(75, 85, 99, 0.5);
-  --os-handle-bg-hover: rgba(75, 85, 99, 0.8);
-  --os-handle-bg-active: rgba(107, 114, 128, 1);
-}
-</style>

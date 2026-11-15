@@ -2,7 +2,6 @@
 
 import { DataAnomaly, defaultMetaData } from '~/types/PostMetaData';
 import type { PostMetaData } from '~/types/PostMetaData';
-import { OverlayScrollbarsComponent } from 'overlayscrollbars-vue';
 
 withDefaults(defineProps<{
   metaData?: PostMetaData;
@@ -95,9 +94,9 @@ onMounted(() => {
 
     </div>
     <div class="flex mt-2 justify-between h-28">
-      <overlay-scrollbars-component v-if="mounted">
+      <easy-scroll-bar v-if="mounted">
         {{ metaData?.description }}
-      </overlay-scrollbars-component>
+      </easy-scroll-bar>
       <div v-else class="w-4/5">
         <USkeleton class="h-4 mb-3 w-full bg-old-neutral-600"/>
         <USkeleton class="h-4 mb-3 w-full bg-old-neutral-600"/>
