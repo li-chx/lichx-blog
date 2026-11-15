@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import breakpointsHelper from '~/utils/BreakpointsHelper';
+import breakpointsHelper from '~/utils/breakpointsHelper.ts';
 import ThemeChange from '~/pages/index/components/ThemeChange.vue';
 
 const hitokoto = ref('加载中...');

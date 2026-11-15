@@ -2,7 +2,7 @@
 
 import { DataAnomaly, defaultMetaData } from '~/types/PostMetaData';
 import type { PostMetaData } from '~/types/PostMetaData';
-import breakpointsHelper from '~/utils/BreakpointsHelper';
+import breakpointsHelper from '~/utils/breakpointsHelper.ts';
 
 withDefaults(defineProps<{
   metaData?: PostMetaData;
@@ -107,7 +107,7 @@ onMounted(() => {
                 <HoverContent>
                   <template #content>
                     <div class="ml-1">
-                      {{ dateFormat(metaData.updated_at[metaData.updated_at.length - 1]) }}
+                      {{ dateFormat(metaData.updated_at[metaData.updated_at.length - 1] ?? DataAnomaly.DataNotFound) }}
                     </div>
                   </template>
                   <template #hoverContent>

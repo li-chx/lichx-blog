@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from '@nuxt/ui';
 import useColorModeStore from '~/stores/colorModeStore';
-import { useWindowScroll } from '@vueuse/core';
 
 const { colorMode } = storeToRefs(useColorModeStore());
 

@@ -1,4 +1,4 @@
-import { useBreakpoints } from '@vueuse/core';
+// import { useBreakpoints } from '@vueuse/core';
 import breakpoints from '~/configs/breakpoints';
 
 const breakpointsHelper = useBreakpoints(breakpoints);
