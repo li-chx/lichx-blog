@@ -58,12 +58,12 @@ function dateFormatToDate(date: Date | DataAnomaly) {
         v-for="(article,index) of articles" :key="article.id"
         class="border-l-2 border-l-old-neutral-400 dark:border-l-old-neutral-500 pl-4">
       <div
-          v-if="currentChoice==='time' && (index == 0 || getYear(article) != getYear(articles[index-1]))"
+          v-if="currentChoice==='time' && (index == 0 || getYear(article) != getYear(articles[index-1]!))"
           class="year-marker relative text-indigo-300 text-2xl pt-3 pb-3">
         {{ getYear(article) }}
       </div>
       <div
-          v-else-if="currentChoice==='category' && (index == 0 || article.category != articles[index-1].category)"
+          v-else-if="currentChoice==='category' && (index == 0 || article.category != articles[index-1]!.category)"
           class="year-marker relative text-indigo-300 text-2xl pt-3 pb-3">
         {{ article.category }}
       </div>

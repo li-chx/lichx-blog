@@ -43,6 +43,7 @@ function revealToggle(e?: MouseEvent) {
 </script>
 
 <template>
+  <ClientOnly>
     <Transition
         mode="out-in"
         enter-active-class="transition-opacity duration-300 ease-in-out"
@@ -67,6 +68,10 @@ function revealToggle(e?: MouseEvent) {
           @click="revealToggle($event)"
       />
     </Transition>
+    <template #fallback>
+      <span class="inline-block size-6 mr-5" />
+    </template>
+  </ClientOnly>
 </template>
 
 <style>

@@ -148,7 +148,7 @@ function updateRule() {
         <Icon class="mr-2" name="material-symbols:category"/>
         类型
       </div>
-      <hr class="border-0 h-[1px] bg-old-neutral-600 mt-3 mb-1"/>
+      <hr class="border-0 h-px bg-old-neutral-600 mt-3 mb-1"/>
       <div class="flex mt-4">
         <div
             v-for="(data, index) of typeGroup"
@@ -167,7 +167,7 @@ function updateRule() {
         <Icon class="mr-2" name="material-symbols:book"/>
         分类
       </div>
-      <hr class="border-0 h-[1px] bg-old-neutral-600 mt-3 mb-1"/>
+      <hr class="border-0 h-px bg-old-neutral-600 mt-3 mb-1"/>
       <div
           v-for="([name,count],index) of categories" :key="index"
           class="flex justify-between pl-4 pr-4 hover:text-sky-400 dark:hover:text-[#cccaff] transition-colors duration-300"
@@ -190,7 +190,7 @@ function updateRule() {
         <Icon class="mr-2" name="material-symbols:bookmarks"/>
         标签
       </div>
-      <hr class="border-0 h-[1px] bg-old-neutral-600 mt-3 mb-1"/>
+      <hr class="border-0 h-px bg-old-neutral-600 mt-3 mb-1"/>
       <div class="flex flex-wrap">
         <div
             v-for="([name,count],index) of tags" :key="index"
