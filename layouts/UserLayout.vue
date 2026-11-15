@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from '@nuxt/ui';
 import useColorModeStore from '~/stores/colorModeStore';
+import { provideNavbarHeight } from '~/composables/useNavbarHeight';
 
 const { colorMode } = storeToRefs(useColorModeStore());
 
@@ -63,6 +64,11 @@ const mounted = ref(false);
 onMounted(() => {
   mounted.value = true;
 });
+
+const navbarEl = ref<HTMLDivElement>();
+const { height: navbarHeight } = useElementSize(navbarEl);
+
+provideNavbarHeight(navbarHeight);
 </script>
 
 <template>
@@ -73,8 +79,8 @@ onMounted(() => {
           class="flex flex-col relative transition-[height] duration-500 max-h-80 min-h-40">
         <!-- header -->
         <div
-             v-if="mounted"
-             @mouseenter="() => {
+            v-if="mounted"
+            @mouseenter="() => {
           if(scrollY === 0) {
             collapsed = false;
           }
@@ -101,6 +107,7 @@ onMounted(() => {
         </div>
         <!-- navbar -->
         <div
+            ref="navbarEl"
             class="fixed z-10 w-full transition-all duration-500 dark:bg-gray-800/60 bg-old-neutral-50/40 backdrop-blur-sm dark:backdrop-blur-md">
           <div class="flex justify-center items-center h-full">
             <div class="flex-1 overflow-hidden">

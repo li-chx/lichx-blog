@@ -9,7 +9,7 @@ const props = withDefaults(defineProps<{
 {
   metaData: () => defaultMetaData,
 });
-const { data: rawbody } = useAsyncData('simpleCard:' + props.metaData.id, async () => (await queryCollection('content').where('id', '=', props.metaData.id).first())?.rawbody);
+const { data: article } = useAsyncData('simpleCard:' + props.metaData.id, async () => (await queryCollection('content').where('id', '=', props.metaData.id).first()));
 const collapsed = ref(true);
 const typeChinese = new Map<string | undefined, string>([
   ['rambling', '絮语'],
@@ -47,12 +47,6 @@ function getCostTime(length: number | DataAnomaly) {
   }
 }
 
-const safeEditorId = computed(() => {
-  const encoded = btoa(encodeURIComponent(props.metaData.id))
-    .replace(/[+/=]/g, '_'); // 替换 Base64 中的特殊字符
-  return `rambling_${encoded}`;
-});
-
 const showShadow = ref(true);
 
 function reverseCollapsed() {
@@ -76,7 +70,7 @@ function reverseCollapsed() {
     <div class="text-4xl">
       {{ (typeChinese.get(metaData?.type) || 'unknown Type') + '：' }}{{ props.metaData.title }}
     </div>
-    <div class="flex items-center mt-2 max-w-[400px] overflow-hidden">
+    <div class="flex items-center mt-2 max-w-100 overflow-hidden">
 
       <div title="发布时间" class="flex items-center">
         <Icon name="lucide:clock-arrow-up"/>
@@ -117,9 +111,7 @@ function reverseCollapsed() {
     <div
         class="relative flex mt-2 justify-between overflow-hidden duration-300 ease-in-out min-h-34"
         :class="{'max-h-34' : collapsed, 'max-h-screen':!collapsed}">
-      <ReadonlyMdEditor
-          v-if="rawbody" :editor-id="safeEditorId" :markdown="rawbody!"
-          class="w-full"/>
+      <ArticleContent v-if="article" :article="article" class="w-full"/>
       <div
           class="absolute bottom-0 left-0 right-0 h-14 bg-linear-to-t from-old-neutral-200 dark:from-old-neutral-800  to-transparent pointer-events-none transition-opacity duration-300"
           :class="collapsed && showShadow?'opacity-100':'opacity-0'"

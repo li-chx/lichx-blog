@@ -18,7 +18,6 @@ export default defineNuxtConfig({
   ],
   css: ['~/assets/css/main.css'],
   ui: {
-    colorMode: false,
     fonts: false,
   },
   app: {
@@ -30,7 +29,22 @@ export default defineNuxtConfig({
       meta: [
         { name: 'description', content: 'Lichx 个人博客' },
       ],
-      script: [{ src: '/darkVerify.js' }],
+    },
+  },
+  content: {
+    build: {
+      markdown: {
+        highlight: {
+          theme: {
+            default: 'github-light',
+            dark: 'github-dark',
+          },
+        },
+        toc: {
+          depth: 4,
+          searchDepth: 4,
+        },
+      },
     },
   },
   icon: {
