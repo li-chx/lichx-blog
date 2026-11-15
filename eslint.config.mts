@@ -7,7 +7,6 @@ import globals from 'globals';
 import pluginVue from 'eslint-plugin-vue';
 import skipFormatting from '@vue/eslint-config-prettier/skip-formatting';
 import stylistic from '@stylistic/eslint-plugin';
-import stylisticJsx from '@stylistic/eslint-plugin-jsx';
 import vueEslintParser from 'vue-eslint-parser';
 
 // 支持 .vue 里的 ts/tsx
@@ -73,7 +72,6 @@ export default withNuxt(
         parserOptions: { parser: tseslint.parser },
       },
     },
-    stylisticJsx.configs.all,
     stylistic.configs.customize({
       indent: 2,
       quotes: 'single',
@@ -83,5 +81,5 @@ export default withNuxt(
       arrowParens: true,
     },
     ),
-  ) as unknown as ResolvableFlatConfig[]),
+  ) as unknown as Parameters<typeof withNuxt>),
 );
