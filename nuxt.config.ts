@@ -49,7 +49,10 @@ export default defineNuxtConfig({
   },
   icon: {
     provider: 'server',
-    serverBundle: 'local',
+    serverBundle: {
+      remote: false,
+      externalizeIconsJson: true,
+    },
 
     fallbackToApi: true,
 
@@ -58,8 +61,4 @@ export default defineNuxtConfig({
       icons: [],
     },
   },
-  // sourcemap: {
-  //   server: true,
-  //   client: true,
-  // },
 });
