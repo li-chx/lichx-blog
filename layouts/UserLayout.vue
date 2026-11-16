@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from '@nuxt/ui';
-import useColorModeStore from '~/stores/colorModeStore';
 import { provideNavbarHeight } from '~/composables/useNavbarHeight';
-
-const { colorMode } = storeToRefs(useColorModeStore());
 
 const isHome = computed(() => useRoute().path === '/');
 const items = ref<NavigationMenuItem[]>([
@@ -33,7 +30,41 @@ const items = ref<NavigationMenuItem[]>([
     to: '/about',
   },
 ]);
+
+useHead({
+  link: [
+    {
+      rel: 'preload',
+      as: 'image',
+      href: '/79d52228c770808810a310115567e6790380823a.webp',
+      type: 'image/webp',
+      fetchpriority: 'high',
+    },
+    {
+      rel: 'preload',
+      as: 'image',
+      href: '/anime-8788959.webp',
+      type: 'image/webp',
+      fetchpriority: 'high',
+    },
+  ],
+});
+
 const collapsed = ref(false);
+let collapseCancel: number | undefined = undefined;
+
+function startCollapseCountdown() {
+  if (scrollY.value === 0) {
+    collapseCancel = setTimeout(() => {
+      collapsed.value = false;
+    }, 300);
+  }
+}
+
+function stopCollapseCountDownAndStopCollapse() {
+  clearTimeout(collapseCancel);
+  collapsed.value = true;
+}
 
 onMounted(() => {
   setTimeout(() => {
@@ -79,30 +110,14 @@ provideNavbarHeight(navbarHeight);
           class="flex flex-col relative transition-[height] duration-500 max-h-80 min-h-40">
         <!-- header -->
         <div
-            v-if="mounted"
-            @mouseenter="() => {
-          if(scrollY === 0) {
-            collapsed = false;
-          }
-        }" @mouseleave="collapsed = true">
+            @mouseenter="startCollapseCountdown()" @mouseleave="stopCollapseCountDownAndStopCollapse()">
           <div
-              v-if="colorMode === 'light'"
-              class="flex bg-top absolute w-full h-full bg-[url('/79d52228c770808810a310115567e6790380823a.webp')] ">
+              class="flex bg-top absolute w-full h-full bg-[url('/79d52228c770808810a310115567e6790380823a.webp')] dark:bg-[url('/anime-8788959.webp')]">
             <slot name="header"/>
           </div>
-          <div
-              v-else
-              class="flex bg-top absolute w-full h-full bg-[url('/anime-8788959.webp')]">
-            <slot name="header"/>
-          </div>
-          <!-- header picture -->
           <div v-if="isScrollDown">
             <div
-                v-if="colorMode === 'light'"
-                class="opacity-80 max-h-12 flex w-full h-full fixed bg-[url('/79d52228c770808810a310115567e6790380823a.webp')] bg-cover bg-top"/>
-            <div
-                v-else
-                class="opacity-20 max-h-12 flex w-full h-full fixed bg-[url('/anime-8788959.webp')] bg-cover bg-center"/>
+                class="opacity-80 dark:opacity-20 max-h-12 flex w-full h-full fixed bg-[url('/79d52228c770808810a310115567e6790380823a.webp')] dark:bg-[url('/anime-8788959.webp')] bg-cover bg-top dark:bg-center"/>
           </div>
         </div>
         <!-- navbar -->
@@ -114,9 +129,15 @@ provideNavbarHeight(navbarHeight);
               <slot name="navbarLeft" :is-scroll-down="isScrollDown"/>
             </div>
             <div
-                class="transition-[width] duration-500 flex 2xl:w-[1240px] xl:w-[1020px] lg:w-[964px] md:w-[708px] sm:w-[580px] w-10/12">
-              <UNavigationMenu v-if="mounted" :items="items" :class="colorMode" class="w-full"/>
-              <div v-else class="w-full h-12 animate-pulse"></div>
+                class="transition-[width] duration-500 flex 2xl:w-310 xl:w-255 lg:w-241 md:w-177 sm:w-145 w-10/12">
+              <UNavigationMenu
+                  :items="items"
+                  class="w-full
+                    [--ui-text-muted:var(--color-gray-600)]
+                      [--ui-text-dimmed:var(--color-gray-600)]
+                      dark:[--ui-text-muted:var(--color-gray-200)]
+                      dark:[--ui-text-dimmed:var(--color-gray-200)]"
+              />
             </div>
             <div class="flex-1 overflow-hidden">
               <slot name="navbarRight" :is-scroll-down="isScrollDown"/>
@@ -138,7 +159,7 @@ provideNavbarHeight(navbarHeight);
       <div class="flex justify-center items-center bg-white dark:bg-[#16191b] h-full">
         <div
             :class="collapsed ? 'min-h-[80vh]' : 'min-h-[60vh]'"
-            class="transition-[width] duration-500 ease-in-out 2xl:w-[1240px] xl:w-[1020px] lg:w-[964px] md:w-[708px] sm:w-[580px] w-11/12">
+            class="transition-[width] duration-500 ease-in-out 2xl:w-310 xl:w-255 lg:w-241 md:w-177 sm:w-145 w-11/12">
           <slot name="content"/>
         </div>
       </div>
@@ -146,19 +167,3 @@ provideNavbarHeight(navbarHeight);
     </UApp>
   </div>
 </template>
-
-<style scoped lang="less">
-:deep(.light .text-muted:not(:hover)), :deep(.light .text-dimmed:not(:hover)) {
-  --ui-text-muted: var(--light-text-secondary-color);
-  --ui-text-dimmed: var(--light-text-secondary-color);
-}
-
-:deep(.dark .text-muted) {
-  --ui-text-muted: var(--dark-text-color);
-  --ui-text-dimmed: var(--dark-text-color);
-}
-
-:deep(a::before) {
-  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
-}
-</style>
