@@ -140,7 +140,6 @@ onMounted(() => {
           >
             <TechStackCard
                 v-if="breakpointsHelper.greater('lg').value"
-                :async-key="'stack:' + metaData.id"
                 :tech-stack="metaData.tech_stack"
                 :tech-stack-icon-names="metaData.tech_stack_icon_names"
                 :tech-stack-theme-colors="metaData.tech_stack_theme_colors"

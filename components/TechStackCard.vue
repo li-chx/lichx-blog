@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import Highcharts from 'highcharts';
-import { DataAnomaly } from '~/types/PostMetaData';
+import type { DataAnomaly } from '~/types/PostMetaData';
 import 'overlayscrollbars/overlayscrollbars.css';
 import useColorModeStore from '~/stores/colorModeStore';
 import useIconStore from '~/stores/iconStore';
 
 const props = withDefaults(defineProps<{
-  asyncKey: string;
+  // asyncKey: string;
   techStack?: string[] | DataAnomaly;
   techStackPercent?: number[] | DataAnomaly;
   techStackIconNames?: string[] | DataAnomaly;
@@ -25,19 +25,10 @@ const techStackDarkIconSVG = ref<string[]>([]);
 const { colorMode } = storeToRefs(useColorModeStore());
 
 // 没有这个 asyncKey 会加载不出正确的图标
-const { pending } = useAsyncData(props.asyncKey, async () => {
-  if (props.techStackIconNames === DataAnomaly.DataNotFound || props.techStackIconNames === DataAnomaly.Invalid)
-    return [];
-  const iconStore = useIconStore();
-  for (const iconName of props.techStackIconNames) {
-    await iconStore.setIconInfo(iconName);
-  }
-  for (const iconName of props.techStackIconNames) {
-    techStackLightIconSVG.value.push(iconStore.getColoredIcon(iconName, '#666'));
-    techStackDarkIconSVG.value.push(iconStore.getColoredIcon(iconName, '#aaa'));
-  }
-  return [];
-});
+// const { pending } = useAsyncData(props.asyncKey, async () => {
+//   if (props.techStackIconNames === DataAnomaly.DataNotFound || props.techStackIconNames === DataAnomaly.Invalid)
+//     return [];
+// });
 
 function toPercent(num: number | undefined): string {
   if (num === undefined || isNaN(num)) return '0%';
@@ -46,7 +37,7 @@ function toPercent(num: number | undefined): string {
   return (rounded === 0 ? '0' : rounded.toFixed(2).replace(/\.?0+$/, '')) + '%';
 }
 
-const noDataAvailable = ref(false);
+const noDataAvailable = ref(true);
 const renderChart = () => {
   const techStack = props.techStack as string[];
   const techStackPercent = props.techStackPercent as number[];
@@ -140,22 +131,27 @@ const renderChart = () => {
 };
 
 let colorModeCallBackKey = '';
-onMounted(() => {
-  if (props.techStack === DataAnomaly.DataNotFound || props.techStack === DataAnomaly.Invalid
-    || props.techStackPercent === DataAnomaly.DataNotFound || props.techStackPercent === DataAnomaly.Invalid
-    || props.techStackThemeColors === DataAnomaly.DataNotFound || props.techStackThemeColors === DataAnomaly.Invalid
-    || props.techStack.length === 0 || props.techStackPercent.length === 0 || props.techStackThemeColors.length === 0) {
-    noDataAvailable.value = true;
+onMounted(async () => {
+  if ([props.techStack, props.techStackPercent, props.techStackIconNames, props.techStackThemeColors].some((x) => !Array.isArray(x)
+    || x.length === 0)) {
     return;
   }
-  // window.addEventListener('resize', renderChart);
+
+  const iconStore = useIconStore();
+
+  await Promise.all((props.techStackIconNames as string[]).map((iconName) =>
+    iconStore.setIconInfo(iconName),
+  ));
+  for (const iconName of props.techStackIconNames) {
+    techStackLightIconSVG.value.push(iconStore.getColoredIcon(iconName, '#666'));
+    techStackDarkIconSVG.value.push(iconStore.getColoredIcon(iconName, '#aaa'));
+  }
+  noDataAvailable.value = false;
+  await nextTick();
+
+  renderChart();
+
   colorModeCallBackKey = useColorModeStore().registerCallBack(renderChart);
-  watch(pending, (isPending) => {
-    if (!isPending) {
-      // 数据加载完成后的回调逻辑
-      renderChart();
-    }
-  });
 });
 
 onUnmounted(() => {
@@ -163,15 +159,15 @@ onUnmounted(() => {
   useColorModeStore().unregisterCallBack(colorModeCallBackKey);
 });
 
-const mounted = ref(false);
-onMounted(() => {
-  mounted.value = true;
-});
+// const mounted = ref(false);
+// onMounted(() => {
+//   mounted.value = true;
+// });
 </script>
 
 <template>
   <div class="h-full">
-    <div v-if="!mounted||noDataAvailable" class="flex items-center justify-center h-full p-8">
+    <div v-if="noDataAvailable" class="flex items-center justify-center h-full p-8">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 112.01">
         <g id="_图层_1" data-name="图层 1">
           <polyline
@@ -189,7 +185,7 @@ onMounted(() => {
         </g>
         <g id="_图层_2" data-name="图层 2">
           <text
-              class="[font-family:ArialMT,Arial] text-xl stroke-old-neutral-600 dark:stroke-old-neutral-400 fill-old-neutral-600 dark:fill-old-neutral-400"
+              class="font-[ArialMT,Arial] text-xl stroke-old-neutral-600 dark:stroke-old-neutral-400 fill-old-neutral-600 dark:fill-old-neutral-400"
               transform="translate(89.48 61.61)">
             <tspan x="0" y="0">No Data</tspan>
           </text>

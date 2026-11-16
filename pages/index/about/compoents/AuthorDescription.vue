@@ -18,7 +18,7 @@ onMounted(() => {
     <div class="light:bg-old-neutral-200 dark:bg-old-neutral-800 p-5 mt-3">
       <div class="text-2xl pb-2">技术栈（相对熟练度）</div>
       <TechStackCard
-          v-if="mounted" async-key="about page" :tech-stack="techStack"
+          :tech-stack="techStack"
           :tech-stack-percent="techStackPercent" :tech-stack-icon-names="techStackIconNames"
           :tech-stack-theme-colors="techStackThemeColors"/>
     </div>
