@@ -106,18 +106,19 @@ provideNavbarHeight(navbarHeight);
   <div class="bg-old-neutral-50 dark:bg-[#0b0d0d] w-full min-h-screen h-full">
     <UApp>
       <div
-          :class=" (collapsed ? 'h-[20vh]': 'h-[40vh]')"
-          class="flex flex-col relative transition-[height] duration-500 max-h-80 min-h-40">
-        <!-- header -->
+          :class="collapsed
+      ? 'h-[clamp(8rem,11.25vw,27rem)]'
+      : 'h-[clamp(12rem,16.6667vw,40rem)]'"
+          class="flex flex-col relative transition-[height] duration-500">
         <div
             @mouseenter="startCollapseCountdown()" @mouseleave="stopCollapseCountDownAndStopCollapse()">
           <div
-              class="flex bg-top absolute w-full h-full bg-[url('/79d52228c770808810a310115567e6790380823a.webp')] dark:bg-[url('/anime-8788959.webp')]">
+              class="flex bg-top absolute w-full h-full bg-[url('/79d52228c770808810a310115567e6790380823a.webp')] dark:bg-[url('/anime-8788959.webp')] bg-cover bg-no-repeat">
             <slot name="header"/>
           </div>
           <div v-if="isScrollDown">
             <div
-                class="opacity-80 dark:opacity-20 max-h-12 flex w-full h-full fixed bg-[url('/79d52228c770808810a310115567e6790380823a.webp')] dark:bg-[url('/anime-8788959.webp')] bg-cover bg-top dark:bg-center"/>
+                class="opacity-80 dark:opacity-20 max-h-12 flex w-full h-full fixed bg-[url('/79d52228c770808810a310115567e6790380823a.webp')] dark:bg-[url('/anime-8788959.webp')] bg-cover bg-no-repeat bg-top dark:bg-center"/>
           </div>
         </div>
         <!-- navbar -->

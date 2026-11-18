@@ -23,7 +23,7 @@ onMounted(async () => {
       >
         <div
             v-if="isScrollDown && breakpointsHelper.greaterOrEqual('xl').value"
-            class="pl-5 text-xl h-12 leading-11 flex">
+            class="pl-5 text-xl h-12 flex items-center text-nowrap">
           随机存取
         </div>
       </Transition>
@@ -38,7 +38,7 @@ onMounted(async () => {
     </template>
     <template #header>
       <div class="w-full flex-1 justify-center flex items-center">
-        <p class="text-8xl mt-12">
+        <p class="text-[clamp(2.25rem,5vw,12rem)] leading-none mt-12">
           随机存取
         </p>
       </div>
